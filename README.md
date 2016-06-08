@@ -5,7 +5,7 @@
 **Tags:** page builder, editor, builder, visual editor, front-end editor, design, drag and drop builder, front-end builder, landing page, page builder plugin, site builder, template builder, visual builder, website builder, wysiwyg  
 **Requires at least:** 4.4  
 **Tested up to:** 4.5  
-**Stable tag:** 0.1.7  
+**Stable tag:** 0.2.0  
 **License:** GPLv3  
 **License URI:** https://www.gnu.org/licenses/gpl-3.0.html  
 
@@ -15,7 +15,7 @@ The most advanced frontend drag & drop page builder. Create high-end, pixel perf
 
 Elementor is the fastest free page builder, that enables you to design pages like never before possible.
 
-[youtube https://www.youtube.com/watch?v=kB4U67tiQLA]
+https://www.youtube.com/watch?v=kB4U67tiQLA
 
 With Elementor, we set out to create a unique page builder, with various advantages that set it apart.
 
@@ -110,6 +110,11 @@ Yeah! Elementor enables to seamlessly build RTL pages as well as other translate
 4. Settings page.
 
 ## Changelog ##
+
+### 0.2.0 - 07.06.2016 ###
+* New! - Image Box widget
+* Tweak! - Added reset preset section structure
+* Tweak! - Fixed visibility mobile for small-screen 
 
 ### 0.1.7 - 06.06.2016 ###
 * Tweak! - Changed default image size control
