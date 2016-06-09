@@ -5,7 +5,7 @@
 **Tags:** page builder, editor, builder, visual editor, front-end editor, design, drag and drop builder, front-end builder, landing page, page builder plugin, site builder, template builder, visual builder, website builder, wysiwyg  
 **Requires at least:** 4.4  
 **Tested up to:** 4.5  
-**Stable tag:** 0.2.2  
+**Stable tag:** 0.2.3  
 **License:** GPLv3  
 **License URI:** https://www.gnu.org/licenses/gpl-3.0.html  
 
@@ -110,6 +110,9 @@ Yeah! Elementor enables to seamlessly build RTL pages as well as other translate
 4. Settings page.
 
 ## Changelog ##
+
+### 0.2.3 - 08.06.2016 ###
+* Tweak! - Added HTML tag control for icon box title
 
 ### 0.2.2 - 08.06.2016 ###
 * Tweak! - Minor change from the last release
