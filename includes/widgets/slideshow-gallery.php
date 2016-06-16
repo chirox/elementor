@@ -3,23 +3,23 @@ namespace Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class Widget_SlideShow extends Widget_Base {
-	private $_slider_options = [];
+class Widget_Slideshow_Gallery extends Widget_Base {
+	private $_slideshow_options = [];
 
 	public function get_id() {
-		return 'slideshow';
+		return 'slideshow-gallery';
 	}
 
 	public function get_title() {
-		return __( 'Slideshow', 'elementor' );
+		return __( 'Slideshow Gallery', 'elementor' );
 	}
 
 	public function get_icon() {
-		return 'insert-image';
+		return 'slideshow';
 	}
 
 	protected function _register_controls() {
-		$this->_slider_options = [ 'autoplaySpeed', 'autoplay', 'dots', 'arrows', 'infinite', 'pauseOnHover' ];
+		$this->_slideshow_options = [ 'autoplaySpeed', 'autoplay', 'dots', 'arrows', 'infinite', 'pauseOnHover', 'speed', 'fade' ];
 
 		$this->add_control(
 			'section_image',
@@ -40,7 +40,7 @@ class Widget_SlideShow extends Widget_Base {
 		);
 
 		$this->add_control(
-			'slider',
+			'slideshow',
 			[
 				'label' => __( 'Choose Image', 'elementor' ),
 				'type' => Controls_Manager::GALLERY,
@@ -73,9 +73,19 @@ class Widget_SlideShow extends Widget_Base {
 		$this->add_control(
 			'autoplaySpeed',
 			[
-				'label' => __( 'Autoplay Speed', 'elementor' ),
+				'label' => __( 'Autoplay Speed (ms)', 'elementor' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 3000,
+				'section' => 'section_image',
+			]
+		);
+
+		$this->add_control(
+			'speed',
+			[
+				'label' => __( 'Animation Speed (ms)', 'elementor' ),
+				'type' => Controls_Manager::NUMBER,
+				'default' => 300,
 				'section' => 'section_image',
 			]
 		);
@@ -135,30 +145,46 @@ class Widget_SlideShow extends Widget_Base {
 				],
 			]
 		);
+
+		$this->add_control(
+			'fade',
+			[
+				'label' => __( 'Effects', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'false',
+				'section' => 'section_image',
+				'options' => [
+					'false' => __( 'Slide', 'elementor' ),
+					'true' => __( 'Fade', 'elementor' ),
+				],
+			]
+		);
 	}
 
 	protected function render( $instance = [] ) {
-		if ( empty( $instance['slider'] ) ) {
+		if ( empty( $instance['slideshow'] ) ) {
 			return;
 		}
 
-		foreach ( $this->_slider_options as $option_name ) {
+		foreach ( $this->_slideshow_options as $option_name ) {
 			$this->add_render_attribute( 'data', 'data-' . $option_name , $instance[ $option_name ] );
 		}
+
+		$slides = [];
+		foreach ( $instance['slideshow'] as $attachment ) {
+			$image = Group_Control_Image_size::get_attachment_image_src( $attachment['id'], 'thumbnail', $instance );
+			if ( ! empty( $image ) ) {
+				$slides[] = '<div><img src="' . $image . '" alt="slideshow" /></div>';
+			}
+		}
+
+		if ( empty( $slides ) ) {
+			return;
+		}
 		?>
-
-		<div class="elementor-slider-wrapper">
-			<div class="elementor-slider" <?php echo $this->get_render_attribute_string( 'data' ); ?> data-rtl="<?php echo is_rtl(); ?>">
-				<?php
-				$slides = '';
-				$ids = explode( ',', $instance['slider'] );
-
-				foreach ( $ids as $attachment_id ) :
-					$image = wp_get_attachment_image_src( $attachment_id, $instance['thumbnail_size'] );
-					$slides .= '<div><img src="' . $image[0] . '" /></div>';
-				endforeach;
-
-				echo $slides; ?>
+		<div class="elementor-slideshow-wrapper">
+			<div class="elementor-slideshow" <?php echo $this->get_render_attribute_string( 'data' ); ?> data-rtl="<?php echo is_rtl(); ?>">
+				<?php echo implode( '', $slides ); ?>
 			</div>
 		</div>
 	<?php

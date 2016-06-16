@@ -80,12 +80,13 @@
 			var $progressbar = $( this ),
 				max = parseInt( $progressbar.data( 'max' ), 10 ),
 				$inner = $progressbar.next(),
+				$innerTextWrap = $inner.find( '.elementor-progress-text' ),
 				$percent = $inner.find( '.elementor-progress-percentage' ),
 				innerText = $inner.data( 'inner' ) ? $inner.data( 'inner' ) : '';
 
 			$progressbar.css( 'width', max + '%' );
 			$inner.css( 'width', max + '%' );
-			$inner.text( innerText + '' );
+			$innerTextWrap.html( innerText + '' );
 			$percent.html(  max + '%' );
 
 		}, { offset: '90%' } );
@@ -185,19 +186,24 @@
 	// Carousel Widget
 	elementorBindUI.addBindEvent( 'carousel', function() {
 		var $wrapper = $( this ).find( '.elementor-carousel-wrapper' ),
-			$carousel = $wrapper.children( '.elementor-carousel' );
+			$carousel = $wrapper.children( '.elementor-carousel' ),
+			$data = $carousel.data();
 
-		var slideToShow = $carousel.data( 'slidestoshow' ),
-			slideToScroll = $carousel.data( 'slidestoscroll' ),
-			autoPlay = $carousel.data( 'autoplay' ),
-			autoplaySpeed = $carousel.data( 'autoplayspeed' ),
-			dots = $carousel.data( 'dots' ),
-			arrows = $carousel.data( 'arrows' ),
-			infinite = $carousel.data( 'infinite' ),
-			pauseOnHover = $carousel.data( 'pauseonhover' ),
-			rtl = $carousel.data( 'rtl' );
+		if ( ! $data ) {
+			return;
+		}
 
-		var options =  {
+		var slideToShow = $data.slidestoshow,
+			slideToScroll = $data.slidestoscroll,
+			autoPlay = $data.autoplay,
+			autoplaySpeed = $data.autoplayspeed,
+			dots = $data.dots,
+			arrows = $data.arrows,
+			infinite = $data.infinite,
+			pauseOnHover = $data.pauseonhover,
+			rtl = $data.rtl;
+
+		var options = {
 			slidesToShow: slideToShow,
 			slidesToScroll: slideToScroll,
 			autoplay: autoPlay,
@@ -226,22 +232,30 @@
 		};
 
 		$carousel.slick( options );
+
 	} );
 
-	// Slider Widget
-	elementorBindUI.addBindEvent( 'slideshow', function() {
-		var $wrapper = $( this ).find( '.elementor-slider-wrapper' ),
-			$slider = $wrapper.children( '.elementor-slider' );
+	// Slideshow Widget
+	elementorBindUI.addBindEvent( 'slideshow-gallery', function() {
+		var $wrapper = $( this ).find( '.elementor-slideshow-wrapper' ),
+			$slider = $wrapper.children( '.elementor-slideshow' ),
+			$data  = $slider.data();
 
-		var autoPlay = $slider.data( 'autoplay' ),
-			autoplaySpeed = $slider.data( 'autoplayspeed' ),
-			dots = $slider.data( 'dots' ),
-			arrows = $slider.data( 'arrows' ),
-			infinite = $slider.data( 'infinite' ),
-			pauseOnHover = $slider.data( 'pauseonhover' ),
-			rtl = $slider.data( 'rtl' );
+		if ( ! $data ) {
+			return;
+		}
 
-		var options =  {
+		var autoPlay = $data.autoplay,
+			autoplaySpeed = $data.autoplayspeed,
+			dots = $data.dots,
+			arrows = $data.arrows,
+			infinite = $data.infinite,
+			pauseOnHover = $data.pauseonhover,
+			rtl = $data.rtl,
+			speed = $data.speed,
+			fade = $data.fade;
+
+		var options = {
 			slidesToShow: 1,
 			autoplay: autoPlay,
 			autoplaySpeed: autoplaySpeed,
@@ -250,25 +264,12 @@
 			infinite: infinite,
 			pauseOnHover: pauseOnHover,
 			rtl: rtl,
-			responsive: [
-				{
-					breakpoint: 767,
-					settings: {
-						slidesToShow: 2,
-						slidesToScroll: 2
-					}
-				},
-				{
-					breakpoint: 480,
-					settings: {
-						slidesToShow: 1,
-						slidesToScroll: 1
-					}
-				}
-			]
+			speed: speed,
+			fade: fade
 		};
 
 		$slider.slick( options );
+
 	} );
 
 	// Alert Widget

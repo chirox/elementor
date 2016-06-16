@@ -3,36 +3,25 @@ namespace Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class Widget_Gallery extends Widget_Base {
+class Widget_Grid_Gallery extends Widget_Base {
 
 	public function get_id() {
-		return 'gallery';
+		return 'grid-gallery';
 	}
 
 	public function get_title() {
-		return __( 'Gallery', 'elementor' );
+		return __( 'Grid Gallery', 'elementor' );
 	}
 
 	public function get_icon() {
-		return 'photo-library';
-	}
-
-	private function _get_image_sizes() {
-		$wp_image_sizes = get_intermediate_image_sizes();
-
-		$image_sizes = [];
-		foreach ( $wp_image_sizes as $image_size ) {
-			$image_sizes[ $image_size ] = ucwords( str_replace( '_', ' ', $image_size ) );
-		}
-
-		return $image_sizes;
+		return 'gallery-grid';
 	}
 
 	protected function _register_controls() {
 		$this->add_control(
-			'section_gallery_name',
+			'section_gallery',
 			[
-				'label' => __( 'Image Gallery', 'elementor' ),
+				'label' => __( 'Grid Gallery', 'elementor' ),
 				'type' => Controls_Manager::SECTION,
 			]
 		);
@@ -43,7 +32,7 @@ class Widget_Gallery extends Widget_Base {
 				'label' => __( 'View', 'elementor' ),
 				'type' => Controls_Manager::HIDDEN,
 				'default' => 'traditional',
-				'section' => 'section_gallery_name',
+				'section' => 'section_gallery',
 			]
 		);
 
@@ -52,7 +41,29 @@ class Widget_Gallery extends Widget_Base {
 			[
 				'label' => __( 'Add Images', 'elementor' ),
 				'type' => Controls_Manager::GALLERY,
-				'section' => 'section_gallery_name',
+				'section' => 'section_gallery',
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Image_size::get_type(),
+			[
+				'name' => 'thumbnail',
+				'exclude' => [ 'custom' ],
+			]
+		);
+
+		$gallery_columns = range( 1, 10 );
+		$gallery_columns = array_combine( $gallery_columns, $gallery_columns );
+
+		$this->add_control(
+			'gallery_columns',
+			[
+				'label' => __( 'Columns', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 4,
+				'options' => $gallery_columns,
+				'section' => 'section_gallery',
 			]
 		);
 
@@ -62,10 +73,10 @@ class Widget_Gallery extends Widget_Base {
 				'label' => __( 'Link to', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'file',
-				'section' => 'section_gallery_name',
+				'section' => 'section_gallery',
 				'options' => [
-					'attachment' => __( 'Attachment Page', 'elementor' ),
 					'file' => __( 'Media File', 'elementor' ),
+					'attachment' => __( 'Attachment', 'elementor' ),
 					'none' => __( 'None', 'elementor' ),
 				],
 			]
@@ -74,25 +85,14 @@ class Widget_Gallery extends Widget_Base {
 		$this->add_control(
 			'gallery_rand',
 			[
-				'label' => __( 'Random', 'elementor' ),
+				'label' => __( 'Ordering', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
-				'section' => 'section_gallery_name',
-				'default' => 'no',
+				'section' => 'section_gallery',
 				'options' => [
-					'no' => __( 'No', 'elementor' ),
-					'rand' => __( 'Yes', 'elementor' ),
+					'' => __( 'Default', 'elementor' ),
+					'rand' => __( 'Random', 'elementor' ),
 				],
-			]
-		);
-
-		$this->add_control(
-			'gallery_size',
-			[
-				'label' => __( 'Size', 'elementor' ),
-				'type' => Controls_Manager::SELECT,
-				'default' => 'thumbnail',
-				'section' => 'section_gallery_name',
-				'options' => $this->_get_image_sizes(),
+				'default' => '',
 			]
 		);
 
@@ -106,16 +106,21 @@ class Widget_Gallery extends Widget_Base {
 		);
 
 		$this->add_control(
-			'gallery_columns',
+			'gallery_gap',
 			[
-				'label' => __( 'Columns', 'elementor' ),
+				'label' => __( 'Columns Gap', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
-				'default' => 3,
-				'options' => array_combine( range( 1, 9 ),range( 1, 9 ) ),
 				'section' => 'section_gallery_images',
 				'tab' => self::TAB_STYLE,
+				'options' => [
+					'' => __( 'Default', 'elementor' ),
+					'custom' => __( 'Custom', 'elementor' ),
+				],
+				'default' => '',
 			]
 		);
+
+		$columns_padding = is_rtl() ? '0 0 -{{SIZE}}{{UNIT}} -{{SIZE}}{{UNIT}};' : '0 -{{SIZE}}{{UNIT}} -{{SIZE}}{{UNIT}} 0;';
 
 		$this->add_control(
 			'columns_padding',
@@ -123,27 +128,33 @@ class Widget_Gallery extends Widget_Base {
 				'label' => __( 'Columns Padding', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
 				'default' => [
-					'size' => 10,
+					'size' => 15,
 				],
 				'range' => [
 					'px' => [
-						'max' => 50,
+						'max' => 100,
 					],
+				],
+				'condition' => [
+					'gallery_gap' => 'custom',
 				],
 				'section' => 'section_gallery_images',
 				'tab' => self::TAB_STYLE,
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item' => 'padding: 0 {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}} 0;',
+					'{{WRAPPER}} .gallery' => 'margin: ' . $columns_padding,
 				],
 			]
 		);
 
-		$this->add_control(
-			'section_border',
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
 			[
-				'label' => __( 'Border', 'elementor' ),
-				'type' => Controls_Manager::SECTION,
+				'name' => 'border',
+				'label' => __( 'Image Border', 'elementor' ),
 				'tab' => self::TAB_STYLE,
+				'section' => 'section_gallery_images',
+				'selector' => '{{WRAPPER}} .gallery-item img',
 			]
 		);
 
@@ -154,9 +165,9 @@ class Widget_Gallery extends Widget_Base {
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%' ],
 				'tab' => self::TAB_STYLE,
-				'section' => 'section_border',
+				'section' => 'section_gallery_images',
 				'selectors' => [
-					'{{WRAPPER}} img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .gallery-item img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
@@ -167,6 +178,24 @@ class Widget_Gallery extends Widget_Base {
 				'label' => __( 'Caption', 'elementor' ),
 				'type' => Controls_Manager::SECTION,
 				'tab' => self::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'gallery_display_caption',
+			[
+				'label' => __( 'Display', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'section' => 'section_gallery_images',
+				'tab' => self::TAB_STYLE,
+				'default' => 'default',
+				'options' => [
+					'default' => __( 'Show', 'elementor' ),
+					'none' => __( 'Hide', 'elementor' ),
+				],
+				'selectors' => [
+					'{{WRAPPER}} .gallery-item .gallery-caption' => 'display: {{VALUE}};',
+				],
 			]
 		);
 
@@ -199,6 +228,9 @@ class Widget_Gallery extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item .gallery-caption' => 'text-align: {{VALUE}};',
 				],
+				'condition' => [
+					'gallery_display_caption' => 'default',
+				],
 			]
 		);
 
@@ -230,34 +262,32 @@ class Widget_Gallery extends Widget_Base {
 	}
 
 	protected function render( $instance = [] ) {
-		$shortcode = '';
-		if ( '' !== $instance['wp_gallery'] ) {
-			$this->add_render_attribute( 'shortcode', 'ids', $instance['wp_gallery'] );
+		if ( ! $instance['wp_gallery'] ) {
+			return;
+		}
 
-			if ( '' !== $instance['gallery_columns'] ) {
-				$this->add_render_attribute( 'shortcode', 'columns', $instance['gallery_columns'] );
-			}
+		$ids = wp_list_pluck( $instance['wp_gallery'], 'id' );
 
-			if ( '' !== $instance['gallery_size'] ) {
-				$this->add_render_attribute( 'shortcode', 'size', $instance['gallery_size'] );
-			}
+		$this->add_render_attribute( 'shortcode', 'ids', implode( ',', $ids ) );
 
-			if ( '' !== $instance['gallery_link'] ) {
-				$this->add_render_attribute( 'shortcode', 'link', $instance['gallery_link'] );
-			}
+		$this->add_render_attribute( 'shortcode', 'size', $instance['thumbnail_size'] );
 
-			if ( 'no' !== $instance['gallery_rand'] ) {
-				$this->add_render_attribute( 'shortcode', 'orderby', $instance['gallery_rand'] );
-			}
+		if ( $instance['gallery_columns'] ) {
+			$this->add_render_attribute( 'shortcode', 'columns', $instance['gallery_columns'] );
+		}
 
-			$shortcode .= '[gallery ' . $this->get_render_attribute_string( 'shortcode' ) . ']';
+		if ( $instance['gallery_link'] ) {
+			$this->add_render_attribute( 'shortcode', 'link', $instance['gallery_link'] );
+		}
+
+		if ( ! empty( $instance['gallery_rand'] ) ) {
+			$this->add_render_attribute( 'shortcode', 'orderby', $instance['gallery_rand'] );
 		}
 		?>
-		<?php if ( ! empty( $shortcode ) ) : ?>
-			<div class="elementor-wp-gallery">
-				<?php echo do_shortcode( $shortcode ); ?>
-			</div>
-		<?php endif;
+		<div class="elementor-wp-gallery">
+			<?php echo do_shortcode( '[gallery ' . $this->get_render_attribute_string( 'shortcode' ) . ']' ); ?>
+		</div>
+		<?php
 	}
 
 	protected function content_template() {}

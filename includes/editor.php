@@ -52,13 +52,18 @@ class Editor {
 		// Set the headers to prevent caching for the different browsers
 		nocache_headers();
 
+		// Tell to WP Cache plugins do not cache this request.
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+
 		// Print the panel
 		$this->print_panel_html();
 		die;
 	}
 
 	public function is_edit_mode() {
-		if ( ! Utils::is_current_user_can_edit() ) {
+		if ( ! User::is_current_user_can_edit() ) {
 			return false;
 		}
 
@@ -291,9 +296,11 @@ class Editor {
 				'edit_post_link' => get_edit_post_link(),
 				'settings_page_link' => admin_url( 'admin.php?page=' . Settings::PAGE_ID ),
 				'elementor_site' => 'https://elementor.com/',
+				'assets_url' => ELEMENTOR_ASSETS_URL,
 				'data' => Plugin::instance()->db->get_builder( $post_id, DB::REVISION_DRAFT ),
 				'locked_user' => $locked_user,
 				'is_rtl' => is_rtl(),
+				'introduction' => User::get_introduction(),
 				'i18n' => [
 					'elementor' => __( 'Elementor', 'elementor' ),
 					'dialog_confirm_delete' => __( 'Are you sure you want to remove this item?', 'elementor' ),
@@ -314,6 +321,10 @@ class Editor {
 					'revisions_history' => __( 'Revisions History', 'elementor' ),
 					'about_elementor' => __( 'About Elementor', 'elementor' ),
 					'inner_section' => __( 'Columns', 'elementor' ),
+					'dialog_confirm_gallery_delete' => __( 'Are you sure you want to reset this gallery?', 'elementor' ),
+					'delete_gallery' => __( 'Reset Gallery', 'elementor' ),
+					'gallery_images_selected' => __( '{0} Images Selected', 'elementor' ),
+					'insert_media' => __( 'Insert Media', 'elementor' ),
 				],
 			]
 		);

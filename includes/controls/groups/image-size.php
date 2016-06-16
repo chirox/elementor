@@ -18,23 +18,26 @@ class Group_Control_Image_size extends Group_Control_Base {
 
 	private function _get_image_sizes() {
 		$wp_image_sizes = get_intermediate_image_sizes();
+
 		$args = $this->get_args();
-		if ( ! empty( $args['include'] ) ) {
-			$args['exclude'] = [];
+
+		if ( $args['include'] ) {
+			$wp_image_sizes = array_intersect_key( $wp_image_sizes, $args['include'] );
+		} elseif ( $args['exclude'] ) {
+			$wp_image_sizes = array_diff_key( $wp_image_sizes, $args['exclude'] );
 		}
 
 		$image_sizes = [];
+
 		foreach ( $wp_image_sizes as $image_size ) {
-			if ( ! empty( $args['include'] ) && ! in_array( $image_size, $args['include'] ) )
-				continue;
-
-			if ( ! empty( $args['exclude'] ) && in_array( $image_size, $args['exclude'] ) )
-				continue;
-
 			$image_sizes[ $image_size ] = ucwords( str_replace( '_', ' ', $image_size ) );
 		}
 
-		$image_sizes['full'] = _x( 'Full', 'Image Size Control', '' );
+		$image_sizes['full'] = _x( 'Full', 'Image Size Control', 'elementor' );
+
+		if ( empty( $args['exclude']['custom'] ) ) {
+			$image_sizes['custom'] = _x( 'Custom', 'Image Size Control', 'elementor' );
+		}
 
 		return $image_sizes;
 	}
@@ -47,6 +50,7 @@ class Group_Control_Image_size extends Group_Control_Base {
 		// Get the first item for default value
 		$default_value = array_keys( $image_sizes );
 		$default_value = array_shift( $default_value );
+
 		$controls['size'] = [
 			'label' => _x( 'Image Size', 'Image Size Control', 'elementor' ),
 			'type' => Controls_Manager::SELECT,
@@ -54,6 +58,50 @@ class Group_Control_Image_size extends Group_Control_Base {
 			'default' => $default_value,
 		];
 
+		if ( isset( $image_sizes['custom'] ) ) {
+			$controls['custom_dimension'] = [
+				'label' => _x( 'Image Dimension', 'Image Size Control', 'elementor' ),
+				'type' => Controls_Manager::IMAGE_DIMENSIONS,
+				'description' => __( 'Choose size (px)' ),
+				'condition' => [
+					'size' => [ 'custom' ],
+				],
+				'separator' => 'none',
+			];
+		}
+
 		return $controls;
+	}
+
+	public static function get_attachment_image_src( $attachment_id, $group_name, $instance ) {
+		$size = $instance[ $group_name . '_size' ];
+
+		if ( 'custom' !== $size ) {
+			$attachment_size = $size;
+		} else {
+			// Use BFI_Thumb script
+			// TODO: Please rewrite this code
+			if ( ! function_exists( 'bfi_thumb' ) ) {
+				require( ELEMENTOR_PATH . 'includes/libraries/bfi-thumb/bfi-thumb.php' );
+			}
+
+			$custom_dimension = $instance[ $group_name . '_custom_dimension' ];
+
+			$attachment_size = [
+				'bfi_thumb' => true,
+				'crop' => true,
+			];
+
+			if ( ! empty( $custom_dimension['width'] ) ) {
+				$attachment_size[0] = $custom_dimension['width'];
+			}
+
+			if ( ! empty( $custom_dimension['height'] ) ) {
+				$attachment_size[1] = $custom_dimension['height'];
+			}
+		}
+
+		$image_src = wp_get_attachment_image_src( $attachment_id, $attachment_size );
+		return ! empty( $image_src[0] ) ? $image_src[0] : '';
 	}
 }
