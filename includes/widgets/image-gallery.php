@@ -3,14 +3,14 @@ namespace Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class Widget_Grid_Gallery extends Widget_Base {
+class Widget_Image_Gallery extends Widget_Base {
 
 	public function get_id() {
-		return 'grid-gallery';
+		return 'image-gallery';
 	}
 
 	public function get_title() {
-		return __( 'Grid Gallery', 'elementor' );
+		return __( 'Image Gallery', 'elementor' );
 	}
 
 	public function get_icon() {
@@ -21,7 +21,7 @@ class Widget_Grid_Gallery extends Widget_Base {
 		$this->add_control(
 			'section_gallery',
 			[
-				'label' => __( 'Grid Gallery', 'elementor' ),
+				'label' => __( 'Image Gallery', 'elementor' ),
 				'type' => Controls_Manager::SECTION,
 			]
 		);
@@ -189,9 +189,9 @@ class Widget_Grid_Gallery extends Widget_Base {
 				'type' => Controls_Manager::SELECT,
 				'section' => 'section_caption',
 				'tab' => self::TAB_STYLE,
-				'default' => 'default',
+				'default' => '',
 				'options' => [
-					'default' => __( 'Show', 'elementor' ),
+					'' => __( 'Show', 'elementor' ),
 					'none' => __( 'Hide', 'elementor' ),
 				],
 				'selectors' => [
@@ -229,9 +229,6 @@ class Widget_Grid_Gallery extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item .gallery-caption' => 'text-align: {{VALUE}};',
 				],
-				'condition' => [
-					'gallery_display_caption' => 'default',
-				],
 			]
 		);
 
@@ -245,9 +242,6 @@ class Widget_Grid_Gallery extends Widget_Base {
 				'default' => '',
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item .gallery-caption' => 'color: {{VALUE}};',
-				],
-				'condition' => [
-					'gallery_display_caption' => 'default',
 				],
 			]
 		);
