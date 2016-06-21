@@ -106,9 +106,9 @@ class Widget_Image_Gallery extends Widget_Base {
 		);
 
 		$this->add_control(
-			'gallery_gap',
+			'image_spacing',
 			[
-				'label' => __( 'Columns Gap', 'elementor' ),
+				'label' => __( 'Spacing', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'section' => 'section_gallery_images',
 				'tab' => self::TAB_STYLE,
@@ -124,26 +124,27 @@ class Widget_Image_Gallery extends Widget_Base {
 		$columns_padding = is_rtl() ? '0 0 {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}};' : '0 {{SIZE}}{{UNIT}} {{SIZE}}{{UNIT}} 0;';
 
 		$this->add_control(
-			'columns_padding',
+			'image_spacing_custom',
 			[
-				'label' => __( 'Columns Padding', 'elementor' ),
+				'label' => __( 'Image Spacing', 'elementor' ),
 				'type' => Controls_Manager::SLIDER,
-				'default' => [
-					'size' => 15,
-				],
+				'section' => 'section_gallery_images',
+				'tab' => self::TAB_STYLE,
+				'show_label' => false,
 				'range' => [
 					'px' => [
 						'max' => 100,
 					],
 				],
-				'condition' => [
-					'gallery_gap' => 'custom',
+				'default' => [
+					'size' => 15,
 				],
-				'section' => 'section_gallery_images',
-				'tab' => self::TAB_STYLE,
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item' => 'padding:' . $columns_padding,
 					'{{WRAPPER}} .gallery' => 'margin: ' . $columns_margin,
+				],
+				'condition' => [
+					'image_spacing' => 'custom',
 				],
 			]
 		);
@@ -151,7 +152,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		$this->add_group_control(
 			Group_Control_Border::get_type(),
 			[
-				'name' => 'border',
+				'name' => 'image_border',
 				'label' => __( 'Image Border', 'elementor' ),
 				'tab' => self::TAB_STYLE,
 				'section' => 'section_gallery_images',
@@ -160,7 +161,7 @@ class Widget_Image_Gallery extends Widget_Base {
 		);
 
 		$this->add_control(
-			'border_radius',
+			'image_border_radius',
 			[
 				'label' => __( 'Border Radius', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
@@ -267,7 +268,6 @@ class Widget_Image_Gallery extends Widget_Base {
 		$ids = wp_list_pluck( $instance['wp_gallery'], 'id' );
 
 		$this->add_render_attribute( 'shortcode', 'ids', implode( ',', $ids ) );
-
 		$this->add_render_attribute( 'shortcode', 'size', $instance['thumbnail_size'] );
 
 		if ( $instance['gallery_columns'] ) {
@@ -282,7 +282,7 @@ class Widget_Image_Gallery extends Widget_Base {
 			$this->add_render_attribute( 'shortcode', 'orderby', $instance['gallery_rand'] );
 		}
 		?>
-		<div class="elementor-wp-gallery">
+		<div class="elementor-image-gallery">
 			<?php echo do_shortcode( '[gallery ' . $this->get_render_attribute_string( 'shortcode' ) . ']' ); ?>
 		</div>
 		<?php
