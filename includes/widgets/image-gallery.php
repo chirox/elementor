@@ -116,6 +116,7 @@ class Widget_Image_Gallery extends Widget_Base {
 					'' => __( 'Default', 'elementor' ),
 					'custom' => __( 'Custom', 'elementor' ),
 				],
+				'prefix_class' => 'gallery-spacing-',
 				'default' => '',
 			]
 		);
@@ -230,6 +231,9 @@ class Widget_Image_Gallery extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item .gallery-caption' => 'text-align: {{VALUE}};',
 				],
+				'condition' => [
+					'gallery_display_caption' => '',
+				],
 			]
 		);
 
@@ -244,6 +248,9 @@ class Widget_Image_Gallery extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .gallery-item .gallery-caption' => 'color: {{VALUE}};',
 				],
+				'condition' => [
+					'gallery_display_caption' => '',
+				],
 			]
 		);
 
@@ -256,6 +263,9 @@ class Widget_Image_Gallery extends Widget_Base {
 				'tab' => self::TAB_STYLE,
 				'section' => 'section_caption',
 				'selector' => '{{WRAPPER}} .gallery-item .gallery-caption',
+				'condition' => [
+					'gallery_display_caption' => '',
+				],
 			]
 		);
 	}
