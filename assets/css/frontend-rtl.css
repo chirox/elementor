@@ -775,6 +775,49 @@
 .elementor-widget-icon-box .elementor-icon-box-description {
   margin: 0; }
 
+.elementor-testimonial-wrapper {
+  overflow: hidden; }
+  .elementor-testimonial-wrapper .elementor-testimonial-text {
+    margin: 0 0 20px 0; }
+    .elementor-testimonial-wrapper .elementor-testimonial-text.elementor-testimonial-detailes-align-left {
+      text-align: left; }
+    .elementor-testimonial-wrapper .elementor-testimonial-text.elementor-testimonial-detailes-align-right {
+      text-align: right; }
+    .elementor-testimonial-wrapper .elementor-testimonial-text.elementor-testimonial-detailes-align-center {
+      text-align: center; }
+  .elementor-testimonial-wrapper .testimonial_description {
+    width: 100%;
+    text-align: center; }
+    .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-left {
+      text-align: left; }
+    .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-right {
+      text-align: right; }
+      .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-right .elementor-testimonial-image {
+        float: right; }
+      .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-right .testimonial-detailes {
+        text-align: right; }
+      .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-right .testimonial-detailes.elementor-has-image {
+        text-align: right;
+        margin-right: 20px; }
+    .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-center {
+      text-align: center; }
+      .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-center .testimonial-detailes.elementor-has-image {
+        text-align: center;
+        margin-left: 0; }
+      .elementor-testimonial-wrapper .testimonial_description.elementor-testimonial-detailes-align-center .elementor-testimonial-image {
+        display: block; }
+    .elementor-testimonial-wrapper .testimonial_description .elementor-testimonial-image {
+      display: inline-block; }
+      .elementor-testimonial-wrapper .testimonial_description .elementor-testimonial-image figure img {
+        border-radius: 50%; }
+    .elementor-testimonial-wrapper .testimonial_description .testimonial-detailes {
+      display: inline-block;
+      text-align: left;
+      vertical-align: top;
+      margin-top: 20px; }
+      .elementor-testimonial-wrapper .testimonial_description .testimonial-detailes.elementor-has-image {
+        margin-left: 20px; }
+
 .slick-slider {
   position: relative;
   display: block;
@@ -853,7 +896,6 @@
   top: 50%;
   display: block;
   width: 20px;
-  height: 20px;
   padding: 0;
   transform: translate(0, -50%);
   cursor: pointer;
@@ -907,7 +949,7 @@
 .slick-dotted.slick-slider {
   margin-bottom: 30px; }
 
-.slick-dots {
+ul.slick-dots {
   position: absolute;
   bottom: -25px;
   display: block;
@@ -917,7 +959,7 @@
   list-style: none;
   text-align: center;
   line-height: 1; }
-  .slick-dots li {
+  ul.slick-dots li {
     position: relative;
     display: inline-block;
     width: 20px;
@@ -925,7 +967,7 @@
     margin: 0;
     padding: 0;
     cursor: pointer; }
-    .slick-dots li button {
+    ul.slick-dots li button {
       font-size: 0;
       line-height: 0;
       display: block;
@@ -937,11 +979,11 @@
       border: 0;
       outline: none;
       background: transparent; }
-      .slick-dots li button:hover, .slick-dots li button:focus {
+      ul.slick-dots li button:hover, ul.slick-dots li button:focus {
         outline: none; }
-        .slick-dots li button:hover:before, .slick-dots li button:focus:before {
+        ul.slick-dots li button:hover:before, ul.slick-dots li button:focus:before {
           opacity: 1; }
-      .slick-dots li button:before {
+      ul.slick-dots li button:before {
         font-family: 'FontAwesome';
         font-size: 6px;
         line-height: 20px;
@@ -956,7 +998,7 @@
         color: black;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale; }
-    .slick-dots li.slick-active button:before {
+    ul.slick-dots li.slick-active button:before {
       opacity: .75;
       color: black; }
 
