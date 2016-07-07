@@ -29,7 +29,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'social_icon_list',
 			[
-				'label' => 'Social Icons',
+				'label' => __( 'Social Icons', 'elementor' ),
 				'type' => Controls_Manager::REPEATER,
 				'default' => [
 					[
@@ -46,37 +46,37 @@ class Widget_Social_Icons extends Widget_Base {
 				'fields' => [
 					[
 						'name' => 'social',
-						'label' => __( 'Select Social Media', 'elementor' ),
+						'label' => __( 'Icon', 'elementor' ),
 						'type' => Controls_Manager::ICON,
 						'label_block' => true,
 						'default' => 'fa fa-wordpress',
-						'icons' => [
-							'fa fa-behance' => __( 'Behance', 'elementor' ),
-							'fa fa-bitbucket' => __( 'Bitbucket', 'elementor' ),
-							'fa fa-codepen' => __( 'Codepen', 'elementor' ),
-							'fa fa-delicious' => __( 'Delicious', 'elementor' ),
-							'fa fa-digg' => __( 'Digg', 'elementor' ),
-							'fa fa-dribbble' => __( 'Dribbble', 'elementor' ),
-							'fa fa-facebook' => __( 'Facebook', 'elementor' ),
-							'fa fa-flickr' => __( 'Flickr', 'elementor' ),
-							'fa fa-foursquare' => __( 'Foursquare', 'elementor' ),
-							'fa fa-github' => __( 'Github', 'elementor' ),
-							'fa fa-google-plus' => __( 'Google Plus', 'elementor' ),
-							'fa fa-instagram' => __( 'Instagram', 'elementor' ),
-							'fa fa-jsfiddle' => __( 'JSFiddle', 'elementor' ),
-							'fa fa-linkedin' => __( 'Linkedin', 'elementor' ),
-							'fa fa-medium' => __( 'Medium', 'elementor' ),
-							'fa fa-pinterest' => __( 'Pinterest', 'elementor' ),
-							'fa fa-product-hunt' => __( 'Product Hunt', 'elementor' ),
-							'fa fa-reddit' => __( 'Reddit', 'elementor' ),
-							'fa fa-snapchat' => __( 'Snapchat', 'elementor' ),
-							'fa fa-soundcloud' => __( 'SoundCloud', 'elementor' ),
-							'fa fa-stack-overflow' => __( 'Stack Overflow', 'elementor' ),
-							'fa fa-tumblr' => __( 'Tumblr', 'elementor' ),
-							'fa fa-twitter' => __( 'Twitter', 'elementor' ),
-							'fa fa-vimeo' => __( 'Vimeo', 'elementor' ),
-							'fa fa-wordpress' => __( 'WordPress', 'elementor' ),
-							'fa fa-youtube' => __( 'YouTube', 'elementor' ),
+						'include' => [
+							'fa fa-behance',
+							'fa fa-bitbucket',
+							'fa fa-codepen',
+							'fa fa-delicious',
+							'fa fa-digg',
+							'fa fa-dribbble',
+							'fa fa-facebook',
+							'fa fa-flickr',
+							'fa fa-foursquare',
+							'fa fa-github',
+							'fa fa-google-plus',
+							'fa fa-instagram',
+							'fa fa-jsfiddle',
+							'fa fa-linkedin',
+							'fa fa-medium',
+							'fa fa-pinterest',
+							'fa fa-product-hunt',
+							'fa fa-reddit',
+							'fa fa-snapchat',
+							'fa fa-soundcloud',
+							'fa fa-stack-overflow',
+							'fa fa-tumblr',
+							'fa fa-twitter',
+							'fa fa-vimeo',
+							'fa fa-wordpress',
+							'fa fa-youtube',
 						],
 					],
 					[
@@ -91,6 +91,7 @@ class Widget_Social_Icons extends Widget_Base {
 						'placeholder' => __( 'http://your-link.com', 'elementor' ),
 					],
 				],
+				'title_field' => 'social',
 			]
 		);
 
@@ -148,7 +149,7 @@ class Widget_Social_Icons extends Widget_Base {
 		$this->add_control(
 			'section_social_style',
 			[
-				'label' => __( 'Social Icon Style', 'elementor' ),
+				'label' => __( 'Icon', 'elementor' ),
 				'type' => Controls_Manager::SECTION,
 				'tab' => self::TAB_STYLE,
 			]
@@ -164,7 +165,7 @@ class Widget_Social_Icons extends Widget_Base {
 				'default' => 'default',
 				'options' => [
 					'default' => __( 'Official Color', 'elementor' ),
-					'custom' => __( 'Custom Color', 'elementor' ),
+					'custom' => __( 'Custom', 'elementor' ),
 				],
 			]
 		);
