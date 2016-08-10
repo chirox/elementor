@@ -57,14 +57,10 @@ SectionsCollectionView = Marionette.CompositeView.extend( {
 	},
 
 	initialize: function() {
-		if ( 1 > this.collection.length ) {
-			this.addChildModel( {
-				id: elementor.helpers.getUniqueID(),
-				elType: 'section',
-				settings: {},
-				elements: []
-			} );
-		}
+		this
+			.listenTo( this.collection, 'add remove reset', this.onCollectionChanged )
+			.listenTo( elementor.panelElements, 'element:drag:start', this.onPanelElementDragStart )
+			.listenTo( elementor.panelElements, 'element:drag:end', this.onPanelElementDragEnd );
 	},
 
 	addChildModel: function( model, options ) {
@@ -98,16 +94,26 @@ SectionsCollectionView = Marionette.CompositeView.extend( {
 		this.ui.selectPreset.hide();
 	},
 
+	fixBlankPageOffset: function() {
+		var sectionHandleHeight = 27,
+			elTopOffset = this.$el.offset().top,
+			elTopOffsetRange = sectionHandleHeight - elTopOffset;
+
+		if ( 0 < elTopOffsetRange ) {
+			var $style = Backbone.$( '<style>' ).text( '.elementor-editor-active #elementor-inner{margin-top: ' + elTopOffsetRange + 'px}' );
+
+			elementor.$previewContents.children().children( 'head' ).append( $style );
+		}
+	},
+
 	onRender: function() {
 		var self = this;
 
 		self.ui.addSectionArea.html5Droppable( {
 			axis: [ 'vertical' ],
 			groups: [ 'elementor-element' ],
-			onDragging: function( side ) {
-				if ( self.ui.addSectionArea.data( 'side' ) !== side ) {
-					self.ui.addSectionArea.attr( 'data-side', side );
-				}
+			onDragEnter: function( side ) {
+				self.ui.addSectionArea.attr( 'data-side', side );
 			},
 			onDragLeave: function() {
 				self.ui.addSectionArea.removeAttr( 'data-side' );
@@ -125,6 +131,12 @@ SectionsCollectionView = Marionette.CompositeView.extend( {
 				newSection.triggerMethod( 'request:add', widgetData );
 			}
 		} );
+
+		_.defer( _.bind( self.fixBlankPageOffset, this ) );
+	},
+
+	onCollectionChanged: function() {
+		elementor.setFlagEditorChange( true );
 	},
 
 	onPresetSelected: function( event ) {
@@ -147,8 +159,49 @@ SectionsCollectionView = Marionette.CompositeView.extend( {
 		var newSection = this.addSection( { elements: elements } );
 
 		newSection.setStructure( selectedStructure );
-
 		newSection.redefineLayout();
+	},
+
+	onPanelElementDragStart: function() {
+		var $iframes = this.$el.find( 'iframe' );
+
+		if ( ! $iframes.length ) {
+			return;
+		}
+
+		$iframes.each( function() {
+			// Get the inline style only!
+			var currentPointerEvents = this.style.pointerEvents;
+
+			if ( 'none' === currentPointerEvents ) {
+				return;
+			}
+
+			Backbone.$( this )
+				.data( 'backup-pointer-events', currentPointerEvents )
+				.css( 'pointer-events', 'none' );
+		} );
+	},
+
+	onPanelElementDragEnd: function() {
+		var $iframes = this.$el.find( 'iframe' );
+
+		if ( ! $iframes.length ) {
+			return;
+		}
+
+		$iframes.each( function() {
+			var $this = Backbone.$( this ),
+				backupPointerEvents = $this.data( 'backup-pointer-events' );
+
+			if ( undefined === backupPointerEvents ) {
+				return;
+			}
+
+			$this
+				.removeData( 'backup-pointer-events' )
+				.css( 'pointer-events', backupPointerEvents );
+		} );
 	}
 } );
 

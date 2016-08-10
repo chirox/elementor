@@ -94,7 +94,6 @@ ColumnView = BaseElementView.extend( {
 			columnSizeTitle = parseFloat( inlineSize || columnSize ).toFixed( 1 ) + '%';
 
 		this.$el.attr( 'data-col', columnSize );
-		//this.$el.css( 'width', inlineSize ? inlineSize + '%' : '' );
 
 		this.ui.columnTitle.html( columnSizeTitle );
 	},
@@ -135,10 +134,11 @@ ColumnView = BaseElementView.extend( {
 			axis: [ 'vertical' ],
 			groups: [ 'elementor-element' ],
 			isDroppingAllowed: _.bind( self.isDroppingAllowed, self ),
+			onDragEnter: function() {
+				self.$el.addClass( 'elementor-dragging-on-child' );
+			},
 			onDragging: function( side, event ) {
 				event.stopPropagation();
-
-				self.$el.addClass( 'elementor-dragging-on-child' );
 
 				if ( this.dataset.side !== side ) {
 					Backbone.$( this ).attr( 'data-side', side );

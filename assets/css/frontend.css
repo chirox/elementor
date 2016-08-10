@@ -81,11 +81,11 @@
     position: relative; }
     .elementor-section .elementor-container.elementor-container-fluid {
       max-width: 100%; }
-  .elementor-section.elementor-section-height-full {
-    height: 100vh; }
-    .elementor-section.elementor-section-height-full > .elementor-container {
-      height: 100%; }
   @media (min-width: 768px) {
+    .elementor-section.elementor-section-height-full {
+      height: 100vh; }
+      .elementor-section.elementor-section-height-full > .elementor-container {
+        height: 100%; }
     .elementor-section > .elementor-container {
       display: -ms-flexbox;
       display: flex; }
@@ -118,16 +118,7 @@
   width: 100%;
   display: -ms-flexbox;
   display: flex;
-  /* In dragging mode it's causing a columns fall */
-  /* Temp Removing = Wrap in Safari browser
-  &:before,
-  &:after {
-  	content: " ";
-  	display: table;
-  }
-  &:after {
-  	clear: both;
-  }*/ }
+  /* In dragging mode it's causing a columns fall */ }
   @media (max-width: 767px) {
     .elementor-row {
       -ms-flex-wrap: wrap;
@@ -142,7 +133,8 @@
 
 .elementor-widget-wrap {
   position: relative;
-  width: 100%; }
+  width: 100%;
+  z-index: 1; }
 
 .elementor-widget {
   position: relative; }
@@ -364,13 +356,47 @@
   .elementor-widget-heading .elementor-heading-title.elementor-size-xxl {
     font-size: 59px; }
 
-.elementor-widget-image .elementor-image {
-  overflow: hidden; }
-  .elementor-widget-image .elementor-image img {
-    vertical-align: middle; }
-  .elementor-widget-image .elementor-image.elementor-image-shape-circle {
-    border-radius: 50%; }
+.elementor-widget-image .elementor-image img {
+  vertical-align: middle; }
+.elementor-widget-image .elementor-image.elementor-image-shape-circle {
+  border-radius: 50%; }
 
+.elementor-image-gallery .gallery .gallery-item {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto; }
+  .elementor-image-gallery .gallery .gallery-item img {
+    margin: 0 auto; }
+.elementor-image-gallery .gallery.gallery-columns-2 .gallery-item {
+  max-width: 50%; }
+.elementor-image-gallery .gallery.gallery-columns-3 .gallery-item {
+  max-width: 33.33%; }
+.elementor-image-gallery .gallery.gallery-columns-4 .gallery-item {
+  max-width: 25%; }
+.elementor-image-gallery .gallery.gallery-columns-5 .gallery-item {
+  max-width: 20%; }
+.elementor-image-gallery .gallery.gallery-columns-6 .gallery-item {
+  max-width: 16.66%; }
+.elementor-image-gallery .gallery.gallery-columns-7 .gallery-item {
+  max-width: 14.28%; }
+.elementor-image-gallery .gallery.gallery-columns-8 .gallery-item {
+  max-width: 12.5%; }
+.elementor-image-gallery .gallery.gallery-columns-9 .gallery-item {
+  max-width: 11.11%; }
+.elementor-image-gallery .gallery.gallery-columns-10 .gallery-item {
+  max-width: 10%; }
+.elementor-image-gallery .gallery .gallery-caption {
+  margin: 0; }
+
+@media (max-width: 767px) {
+  .elementor-image-gallery .gallery.gallery-columns-3 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-4 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-5 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-6 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-7 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-8 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-9 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-10 .gallery-item {
+    max-width: 50%; } }
+@media (max-width: 479px) {
+  .elementor-image-gallery .gallery.gallery-columns-2 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-3 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-4 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-5 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-6 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-7 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-8 .gallery-item, .elementor-image-gallery .gallery.gallery-columns-9 .gallery-item {
+    max-width: 100%; } }
 .elementor-button-wrapper.elementor-align-center {
   text-align: center; }
 .elementor-button-wrapper.elementor-align-right {
@@ -545,7 +571,7 @@
   .elementor-tabs .elementor-tabs-wrapper {
     overflow: hidden; }
     .elementor-tabs .elementor-tabs-wrapper .elementor-tab-title {
-      display: inline-block; }
+      display: table-cell; }
       .elementor-tabs .elementor-tabs-wrapper .elementor-tab-title > span {
         position: relative;
         display: block;
@@ -721,8 +747,6 @@
 .elementor-image-carousel-wrapper .slick-image-stretch .slick-slide .slick-slide-image {
   width: 100%; }
 
-.elementor-widget-image-box .elementor-image-box-wrapper {
-  overflow: hidden; }
 .elementor-widget-image-box .elementor-image-box-content {
   width: 100%; }
 @media (min-width: 768px) {
@@ -754,18 +778,20 @@
 @media (max-width: 767px) {
   .elementor-widget-image-box .elementor-image-box-img {
     margin-left: auto !important;
-    margin-right: auto !important; } }
+    margin-right: auto !important;
+    margin-bottom: 15px; } }
 .elementor-widget-image-box .elementor-image-box-wrapper {
   text-align: center; }
 .elementor-widget-image-box .elementor-image-box-description {
   margin: 0; }
 
-.elementor-widget-icon-box .elementor-icon-box-wrapper {
-  overflow: hidden; }
 @media (min-width: 768px) {
   .elementor-widget-icon-box.elementor-position-left .elementor-icon-box-wrapper, .elementor-widget-icon-box.elementor-position-right .elementor-icon-box-wrapper {
     display: -ms-flexbox;
     display: flex; }
+  .elementor-widget-icon-box.elementor-position-left .elementor-icon-box-icon, .elementor-widget-icon-box.elementor-position-right .elementor-icon-box-icon {
+    -ms-flex: 0 0 auto;
+        flex: 0 0 auto; }
   .elementor-widget-icon-box.elementor-position-right .elementor-icon-box-wrapper {
     text-align: right;
     -ms-flex-direction: row-reverse;
@@ -791,7 +817,8 @@
 @media (max-width: 767px) {
   .elementor-widget-icon-box .elementor-icon-box-icon {
     margin-left: auto !important;
-    margin-right: auto !important; } }
+    margin-right: auto !important;
+    margin-bottom: 15px; } }
 .elementor-widget-icon-box .elementor-icon-box-wrapper {
   text-align: center; }
 .elementor-widget-icon-box .elementor-icon-box-description {
@@ -912,6 +939,9 @@
   border-radius: 10%; }
 .elementor-widget.elementor-shape-circle .elementor-icon.elementor-social-icon {
   border-radius: 50%; }
+
+body.elementor-page .elementor-widget-menu-anchor {
+  margin-bottom: 0; }
 
 .slick-slider {
   position: relative;

@@ -36,7 +36,7 @@ BaseElementView = Marionette.CompositeView.extend( {
 	},
 
 	getTemplateType: function() {
-		return 'remote';
+		return 'js';
 	},
 
 	initialize: function() {
@@ -52,10 +52,10 @@ BaseElementView = Marionette.CompositeView.extend( {
 		this.listenTo( this.model.get( 'settings' ), 'change', this.onSettingsChanged, this );
 		this.listenTo( this.model.get( 'editSettings' ), 'change', this.onSettingsChanged, this );
 
-		this.on( 'render', this.enqueueFonts );
-		this.on( 'render', this.renderStyles );
-		this.on( 'render', this.renderCustomClasses );
-		this.on( 'render', this.runReadyTrigger );
+		this.on( 'render', function() {
+			this.renderUI();
+			this.runReadyTrigger();
+		} );
 
 		this.initRemoveDialog();
 	},
@@ -77,9 +77,11 @@ BaseElementView = Marionette.CompositeView.extend( {
 
 		this.getRemoveDialog = function() {
 			if ( ! removeDialog ) {
+				var elementTitle = this.model.getTitle();
+
 				removeDialog = elementor.dialogsManager.createWidget( 'confirm', {
-					message: elementor.translate( 'dialog_confirm_delete' ),
-					headerMessage: elementor.translate( 'delete_element' ),
+					message: elementor.translate( 'dialog_confirm_delete', [ elementTitle.toLowerCase() ] ),
+					headerMessage: elementor.translate( 'delete_element', [ elementTitle ] ),
 					strings: {
 						confirm: elementor.translate( 'delete' ),
 						cancel: elementor.translate( 'cancel' )
@@ -147,7 +149,11 @@ BaseElementView = Marionette.CompositeView.extend( {
 			}
 		}
 
-		if ( 0 === $stylesheet.length ) {
+		if ( _.isEmpty( styleHtml ) && ! $stylesheet.length ) {
+			return;
+		}
+
+		if ( ! $stylesheet.length ) {
 			elementor.$previewContents.find( 'head' ).append( '<style type="text/css" id="elementor-style-' + this.model.cid + '"></style>' );
 			$stylesheet = elementor.$previewContents.find( '#elementor-style-' + this.model.cid );
 		}
@@ -176,6 +182,12 @@ BaseElementView = Marionette.CompositeView.extend( {
 		}, this ) );
 	},
 
+	renderUI: function() {
+		this.renderStyles();
+		this.renderCustomClasses();
+		this.enqueueFonts();
+	},
+
 	runReadyTrigger: function() {
 		_.defer( _.bind( function() {
 			elementorBindUI.runReadyTrigger( this.$el );
@@ -196,21 +208,18 @@ BaseElementView = Marionette.CompositeView.extend( {
 			elementor.setFlagEditorChange( true );
 		}
 
-        this.renderStyles();
-		this.renderCustomClasses();
-		this.enqueueFonts();
-
 		// Make sure is correct model
 		if ( settings instanceof BaseSettingsModel ) {
 			var isContentChanged = false;
 
 			_.each( settings.changedAttributes(), function( settingValue, settingKey ) {
-				if ( ! settings.isStyleControl( settingKey ) && ! settings.isClassControl( settingKey ) ) {
+				if ( ! settings.isStyleControl( settingKey ) && ! settings.isClassControl( settingKey ) && settings.getControl( settingKey ) ) {
 					isContentChanged = true;
 				}
 			} );
 
 			if ( ! isContentChanged ) {
+				this.renderUI();
 				return;
 			}
 		}

@@ -175,7 +175,7 @@ App = Marionette.Application.extend( {
 
 		this.$previewContents.on( 'click', function( event ) {
 			var $target = Backbone.$( event.target ),
-				editMode = elementor.dataEditMode.request( 'get:active:mode' ),
+				editMode = elementor.dataEditMode.request( 'activeMode' ),
 				isClickInsideElementor = !! $target.closest( '#elementor' ).length,
 				isTargetInsideDocument = this.contains( $target[0] );
 
@@ -209,13 +209,15 @@ App = Marionette.Application.extend( {
 		    .children( 'body' )
 		    .addClass( 'elementor-editor-active' );
 
+		this.setResizablePanel();
+
 		Backbone.$( '#elementor-loading' ).fadeOut( 600 );
 
 		this.introduction.startOnLoadIntroduction();
 	},
 
 	onEditModeSwitched: function() {
-		var activeMode = elementor.dataEditMode.request( 'get:active:mode' );
+		var activeMode = elementor.dataEditMode.request( 'activeMode' );
 
 		if ( 'preview' === activeMode ) {
 			this.enterPreviewMode();
@@ -225,16 +227,25 @@ App = Marionette.Application.extend( {
 	},
 
 	onPreviewElNotFound: function() {
-		var dialog = this.dialogsManager.createWidget( 'alert', {
+		var dialog = this.dialogsManager.createWidget( 'confirm', {
+			id: 'elementor-fatal-error-dialog',
 			headerMessage: elementor.translate( 'preview_el_not_found_header' ),
 			message: elementor.translate( 'preview_el_not_found_message' ),
 			position: {
 				my: 'center center',
 				at: 'center center'
 			},
+            strings: {
+				confirm: elementor.translate( 'learn_more' ),
+				cancel: elementor.translate( 'go_back' )
+            },
 			onConfirm: function() {
+				open( elementor.config.help_the_content_url, '_blank' );
+			},
+			onCancel: function() {
 				parent.history.go( -1 );
-			}
+			},
+			hideOnButtonClick: false
 		} );
 
 		dialog.show();
@@ -257,12 +268,44 @@ App = Marionette.Application.extend( {
 		} );
 	},
 
+	setResizablePanel: function() {
+		var self = this,
+			side = elementor.config.is_rtl ? 'right' : 'left';
+
+		self.panel.$el.resizable( {
+			handles: elementor.config.is_rtl ? 'w' : 'e',
+			minWidth: 200,
+			maxWidth: 500,
+			start: function() {
+				self.$previewWrapper
+					.addClass( 'ui-resizable-resizing' )
+					.css( 'pointer-events', 'none' );
+			},
+			stop: function() {
+				self.$previewWrapper
+					.removeClass( 'ui-resizable-resizing' )
+					.css( 'pointer-events', '' );
+
+				elementor.data.trigger( 'scrollbar:update' );
+			},
+			resize: function( event, ui ) {
+				self.$previewWrapper
+					.css( side, ui.size.width );
+			}
+		} );
+	},
+
 	enterPreviewMode: function() {
 		this.$previewContents
 		    .find( 'body' )
 		    .add( 'body' )
 		    .removeClass( 'elementor-editor-active' )
 		    .addClass( 'elementor-editor-preview' );
+
+		// Handle panel resize
+		this.$previewWrapper.css( elementor.config.is_rtl ? 'right' : 'left', '' );
+
+		this.panel.$el.css( 'width', '' );
 	},
 
 	exitPreviewMode: function() {
@@ -288,7 +331,8 @@ App = Marionette.Application.extend( {
 		        action: 'elementor_save_builder',
 		        post_id: this.config.post_id,
 		        revision: options.revision,
-		        data: JSON.stringify( elementor.elements.toJSON() )
+		        data: JSON.stringify( elementor.elements.toJSON() ),
+		        _nonce: elementor.config.nonce
 	        }
         } )
         .done( function( data ) {
