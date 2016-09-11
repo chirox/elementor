@@ -47,7 +47,7 @@ class Widget_Icon_box extends Widget_Base {
 			[
 				'label' => __( 'Choose Icon', 'elementor' ),
 				'type' => Controls_Manager::ICON,
-				'default' => 'fa fa-bullhorn',
+				'default' => 'fa fa-star',
 				'section' => 'section_icon',
 			]
 		);
@@ -510,7 +510,7 @@ class Widget_Icon_box extends Widget_Base {
 	protected function render( $instance = [] ) {
 		$this->add_render_attribute( 'icon', 'class', [ 'elementor-icon', 'elementor-animation-' . $instance['hover_animation'] ] );
 
-		$icon_tag = 'div';
+		$icon_tag = 'span';
 
 		if ( ! empty( $instance['link']['url'] ) ) {
 			$this->add_render_attribute( 'link', 'href', $instance['link']['url'] );
@@ -544,19 +544,19 @@ class Widget_Icon_box extends Widget_Base {
 
 	protected function content_template() {
 		?>
-		<% var link = settings.link.url ? 'href="' + settings.link.url + '"' : '',
-				iconTag = link ? 'a' : 'div'; %>
+		<# var link = settings.link.url ? 'href="' + settings.link.url + '"' : '',
+				iconTag = link ? 'a' : 'span'; #>
 		<div class="elementor-icon-box-wrapper">
 			<div class="elementor-icon-box-icon">
-				<<%= iconTag + ' ' + link %> class="elementor-icon elementor-animation-<%- settings.hover_animation %>">
-					<i class="<%- settings.icon %>"></i>
-				</<%= iconTag %>>
+				<{{{ iconTag + ' ' + link }}} class="elementor-icon elementor-animation-{{ settings.hover_animation }}">
+					<i class="{{ settings.icon }}"></i>
+				</{{{ iconTag }}}>
 			</div>
 			<div class="elementor-icon-box-content">
-				<<%= settings.title_size %> class="elementor-icon-box-title">
-					<<%= iconTag + ' ' + link %>><%= settings.title_text %></<%= iconTag %>>
-				</<%= settings.title_size %>>
-				<p class="elementor-icon-box-description"><%= settings.description_text %></p>
+				<{{{ settings.title_size }}} class="elementor-icon-box-title">
+					<{{{ iconTag + ' ' + link }}}>{{{ settings.title_text }}}</{{{ iconTag }}}>
+				</{{{ settings.title_size }}}>
+				<p class="elementor-icon-box-description">{{{ settings.description_text }}}</p>
 			</div>
 		</div>
 		<?php

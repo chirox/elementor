@@ -21,7 +21,7 @@
 			&right {
 
 				.elementor-image-box-wrapper {
-					text-align: getEndDirection();
+					text-align: $end;
 					flex-direction: getValueByDirection(row-reverse, row);
 				}
 			}
@@ -29,7 +29,7 @@
 			&left {
 
 				.elementor-image-box-wrapper {
-					text-align: getStartDirection();
+					text-align: $start;
 					flex-direction: getValueByDirection(row, row-reverse);
 				}
 			}
@@ -74,6 +74,13 @@
 			margin-left: auto !important;
 			margin-right: auto !important;
 			margin-bottom: 15px;
+		}
+	}
+
+	.elementor-image-box-title {
+
+		a {
+			color: inherit;
 		}
 	}
 

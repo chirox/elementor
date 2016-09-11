@@ -3,7 +3,7 @@ Contributors: pojo.me, KingYes, ariel.k, jzaltzberg, yehudah
 Tags: page builder, editor, builder, visual editor, front-end editor, design, drag and drop builder, front-end builder, landing page, page builder plugin, site builder, template builder, visual builder, website builder, wysiwyg
 Requires at least: 4.4
 Tested up to: 4.6
-Stable tag: 0.7.3
+Stable tag: 0.8.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,8 +29,8 @@ Create pages that have "the designer touch", by including unique features like b
 = NEW! Template Library. =
 We've added **Library**, which includes a collection of 20+ beautiful templates, made for you by our top notch designers. You can also save your own pages and sections, and reuse them on different pages, or export them to whole different websites.
 
-= 27 widgets and counting =
-We packed 27 of the most useful widgets into Elementor. True, that's way more than we had to offer, but we wanted to spare no widget from you, so you can reach the top of your design capabilities.
+= 28 widgets and counting =
+We packed 28 of the most useful widgets into Elementor. True, that's way more than we had to offer, but we wanted to spare no widget from you, so you can reach the top of your design capabilities.
 
 - **Heading**. Add eye-catching headlines.
 - **Image**. Control the size, opacity and other settings of images.
@@ -52,6 +52,7 @@ We packed 27 of the most useful widgets into Elementor. True, that's way more th
 - **Toggle**. Like Accordion, for FAQ pages.
 - **Alert**. A colored alert box to draw the attention of the visitor.
 - **HTML**. Insert code into the page.
+- **Shortcode**. Easily insert shortcodes from any plugin into the page.
 - **Menu Anchor**. Link any menu to this anchor.
 - **Sidebar**. Include any sidebar you create into the page.
 - **Google Maps**. Embed maps into the page.
@@ -72,6 +73,7 @@ We've integrated RTL and multi language support within the framework of Elemento
 - [Polish](https://translate.wordpress.org/locale/pl/default/wp-plugins/elementor) - (pl_PL)
 - [Persian](https://translate.wordpress.org/locale/fa/default/wp-plugins/elementor) - (fa_IR)
 - [Hebrew](https://translate.wordpress.org/locale/he/default/wp-plugins/elementor) - (he_IL)
+- [Romanian](https://translate.wordpress.org/locale/ro/default/wp-plugins/elementor) - (ro_RO) - in progress
 - [Spanish (Spain)](https://translate.wordpress.org/locale/es/default/wp-plugins/elementor) - (es_ES) - in progress
 - [French](https://translate.wordpress.org/locale/fr/default/wp-plugins/elementor) - (fr_FR) - in progress
 - [Italian](https://translate.wordpress.org/locale/it/default/wp-plugins/elementor) - (it_IT) - in progress
@@ -152,6 +154,47 @@ No. Elementor supports WordPress 4.4 or greater, and is compatible with PHP 5.4 
 
 == Changelog ==
 
+= 0.8.0 - 07.09.2016 =
+* New! - Added columns ordering on mobile normal / reverse
+* New! - Now you can edit section and column in tablet or mobile mode
+* New! - Set font-size per device in Typography control
+* New! - Set line-height per device in Typography control
+* New! - Set letter-spacing per device in Typography control
+* New! - Set padding per device in Advanced tab
+* New! - Set margin per device in Advanced tab
+* New! - Heading widget - Set alignment per device
+* New! - Button widget - Set alignment per device
+* New! - Image widget - Set alignment per device
+* New! - Icon widget - Set alignment per device
+* New! - Divider widget - Set alignment per device
+* New! - Icon List Widget - Set alignment per device
+* Tweak! - Elementor Library connection status indicator added in System Info
+* Tweak! - Default content-width is now set by css and not by the panel
+* Tweak! - Added shortcode and oEmbed support for Tabs / Accordion / Toggle / Text Editor widgets
+* Tweak! - Removed Default font size in custom option
+* Tweak! - Hide update notice from outside Elementor
+* Tweak! - Removed mobile-landscape and laptop sizes from preview mode
+* Tweak! - Rearrange TinyMCE buttons ([#444](https://github.com/pojome/elementor/issues/444))
+* Tweak! - Changed range for font size control
+* Tweak! - Compatibility with `asp_tags`
+* Tweak! - Improved compatibility for old webkit browsers ([#484](https://github.com/pojome/elementor/issues/484), [#403](https://github.com/pojome/elementor/issues/403), [#370](https://github.com/pojome/elementor/issues/370))
+* Fixed! - Removed style from gallery caption
+* Fixed! - Wrong index in section sorting
+* Fixed! - Column indication on inner section dragging
+* Fixed! - Gap for Columns Widget (nested section)
+* Fixed! - Preview mode with real sizes for mobile and tablet
+* Fixed! - Sortable inner section not showing placeholder
+* Fixed! - Network plugins included in System Info
+* Deprecated! - Column width option for mobile portrait is deprecated. Use Mobile Width option instead
+
+= 0.7.4 - 24.08.2016 =
+* New! - Added Shortcode widget
+* Tweak! - Now compatible with password protected pages
+* Fixed! - Library RTL bug in template preview
+* Fixed! - Bug with `p` tag in Icon Box widget
+* Fixed! - Style in Icon widget
+* Fixed! - HTML widget now is working
+
 = 0.7.3 - 19.08.2016 =
 * Fixed! - Allow columns gap on mobile
 * Fixed! - Content position for section
@@ -192,7 +235,7 @@ No. Elementor supports WordPress 4.4 or greater, and is compatible with PHP 5.4 
 * Fixed! - Allow blank target link for social-icons widget
 
 = 0.6.5 - 08.08.2016 =
-* Tweak! - Added border and box shadow controls for Image widget
+* Tweak! - Added border and box shadow controls for Image widget ([#224](https://github.com/pojome/elementor/issues/244))
 * Tweak! - In new page don't create empty section
 * Tweak! - Embed Roboto font from Google Fonts in editor mode
 * Fixed! - Reset structure or remove column after resize

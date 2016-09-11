@@ -48,7 +48,7 @@ class Widget_Icon extends Widget_Base {
 				'label' => __( 'Icon', 'elementor' ),
 				'type' => Controls_Manager::ICON,
 				'label_block' => true,
-				'default' => 'fa fa-bullhorn',
+				'default' => 'fa fa-star',
 				'section' => 'section_icon',
 			]
 		);
@@ -81,7 +81,7 @@ class Widget_Icon extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'align',
 			[
 				'label' => __( 'Alignment', 'elementor' ),
@@ -102,7 +102,9 @@ class Widget_Icon extends Widget_Base {
 					],
 				],
 				'default' => 'center',
-				'prefix_class' => 'elementor-align-',
+				'selectors' => [
+					'{{WRAPPER}} .elementor-icon-wrapper' => 'text-align: {{VALUE}};',
+				],
 			]
 		);
 
@@ -148,10 +150,6 @@ class Widget_Icon extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}}.elementor-view-framed .elementor-icon' => 'background-color: {{VALUE}};',
 					'{{WRAPPER}}.elementor-view-stacked .elementor-icon' => 'color: {{VALUE}};',
-				],
-				'scheme' => [
-					'type' => Scheme_Color::get_type(),
-					'value' => Scheme_Color::COLOR_2,
 				],
 			]
 		);
@@ -232,24 +230,6 @@ class Widget_Icon extends Widget_Base {
 				],
 			]
 		);
-
-		/* TEMP - border color come from primary color
-		$this->add_control(
-			'border_color',
-			[
-				'label' => __( 'Border Color', 'elementor' ),
-				'type' => Controls_Manager::COLOR,
-				'tab' => self::TAB_STYLE,
-				'section' => 'section_style_icon',
-				'selectors' => [
-					'{{WRAPPER}} .elementor-icon' => 'border-color: {{VALUE}};',
-				],
-				'condition' => [
-					'view' => 'framed',
-				],
-			]
-		);
-		*/
 
 		$this->add_control(
 			'border_radius',
@@ -356,12 +336,12 @@ class Widget_Icon extends Widget_Base {
 
 	protected function content_template() {
 		?>
-		<% var link = settings.link.url ? 'href="' + settings.link.url + '"' : '',
-				iconTag = link ? 'a' : 'div'; %>
+		<# var link = settings.link.url ? 'href="' + settings.link.url + '"' : '',
+				iconTag = link ? 'a' : 'div'; #>
 		<div class="elementor-icon-wrapper">
-			<<%= iconTag %> class="elementor-icon elementor-animation-<%- settings.hover_animation %>" <%= link %>>
-				<i class="<%- settings.icon %>"></i>
-			</<%= iconTag %>>
+			<{{{ iconTag }}} class="elementor-icon elementor-animation-{{ settings.hover_animation }}" {{{ link }}}>
+				<i class="{{ settings.icon }}"></i>
+			</{{{ iconTag }}}>
 		</div>
 		<?php
 	}
