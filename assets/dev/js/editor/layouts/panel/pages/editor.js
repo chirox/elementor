@@ -11,18 +11,26 @@ EditorCompositeView = Marionette.CompositeView.extend( {
 		};
 	},
 
-	childViewContainer: 'div.elementor-controls',
+	behaviors: {
+		HandleInnerTabs: {
+			behaviorClass: require( 'elementor-behaviors/inner-tabs' )
+		}
+	},
+
+	childViewContainer: '#elementor-controls',
 
 	modelEvents: {
 		'destroy': 'onModelDestroy'
 	},
 
 	ui: {
-		'tabs': '.elementor-tabs-controls li'
+		tabs: '.elementor-tabs-controls li',
+		reloadButton: '#elementor-update-preview-button'
 	},
 
 	events: {
-		'click @ui.tabs a': 'onClickTabControl'
+		'click @ui.tabs a': 'onClickTabControl',
+		'click @ui.reloadButton': 'onReloadButtonClick'
 	},
 
 	initialize: function() {
@@ -31,6 +39,7 @@ EditorCompositeView = Marionette.CompositeView.extend( {
 
 	getChildView: function( item ) {
 		var controlType = item.get( 'type' );
+
 		return elementor.getControlItemView( controlType );
 	},
 
@@ -42,7 +51,10 @@ EditorCompositeView = Marionette.CompositeView.extend( {
 	},
 
 	onDestroy: function() {
-		this.getOption( 'editedElementView' ).$el.removeClass( 'elementor-element-editable' );
+		if ( this.editedElementView ) {
+			this.editedElementView.$el.removeClass( 'elementor-element-editable' );
+		}
+
 		this.model.trigger( 'editor:close' );
 
 		this.triggerMethod( 'editor:destroy' );
@@ -60,7 +72,9 @@ EditorCompositeView = Marionette.CompositeView.extend( {
 	},
 
 	onRender: function() {
-		this.getOption( 'editedElementView' ).$el.addClass( 'elementor-element-editable' );
+		if ( this.editedElementView ) {
+			this.editedElementView.$el.addClass( 'elementor-element-editable' );
+		}
 
 		// Set the first tab as active
 		this.ui.tabs.eq( 0 ).find( 'a' ).trigger( 'click' );
@@ -175,6 +189,10 @@ EditorCompositeView = Marionette.CompositeView.extend( {
 		} );
 
 		elementor.channels.data.trigger( 'scrollbar:update' );
+	},
+
+	onReloadButtonClick: function() {
+		elementor.reloadPreview();
 	}
 } );
 

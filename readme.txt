@@ -1,9 +1,9 @@
 === Elementor Page Builder ===
-Contributors: pojo.me, KingYes, ariel.k, jzaltzberg, yehudah
-Tags: page builder, editor, builder, visual editor, front-end editor, design, drag and drop builder, front-end builder, landing page, page builder plugin, site builder, template builder, visual builder, website builder, wysiwyg
+Contributors: pojo.me, KingYes, ariel.k, jzaltzberg, yehudah, mati1000, pojosh
+Tags: page builder, editor, elementor, builder, visual editor, front-end editor, design, drag and drop builder, front-end builder, landing page, page builder plugin, site builder, template builder, visual builder, website builder, wysiwyg
 Requires at least: 4.4
 Tested up to: 4.6
-Stable tag: 0.8.1
+Stable tag: 0.11.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -70,16 +70,18 @@ We've integrated RTL and multi language support within the framework of Elemento
 
 = Translations =
 - [German](https://translate.wordpress.org/locale/de/default/wp-plugins/elementor) - (de_DE)
+- [Spanish (Spain)](https://translate.wordpress.org/locale/es/default/wp-plugins/elementor) - (es_ES)
 - [Japanese](https://translate.wordpress.org/locale/ja/default/wp-plugins/elementor) - (ja)
 - [Portuguese (Portugal)](https://translate.wordpress.org/locale/pt-br/default/wp-plugins/elementor) - (pt_PT)
 - [Portuguese (Brazil)](https://translate.wordpress.org/locale/pt-br/default/wp-plugins/elementor) - (pt_BR)
+- [Swedish](https://translate.wordpress.org/locale/he/default/wp-plugins/elementor) - (sv_SE)
 - [Polish](https://translate.wordpress.org/locale/pl/default/wp-plugins/elementor) - (pl_PL)
 - [Persian](https://translate.wordpress.org/locale/fa/default/wp-plugins/elementor) - (fa_IR)
+- [Romanian](https://translate.wordpress.org/locale/ro/default/wp-plugins/elementor) - (ro_RO)
 - [Hebrew](https://translate.wordpress.org/locale/he/default/wp-plugins/elementor) - (he_IL)
-- [Romanian](https://translate.wordpress.org/locale/ro/default/wp-plugins/elementor) - (ro_RO) - in progress
-- [Spanish (Spain)](https://translate.wordpress.org/locale/es/default/wp-plugins/elementor) - (es_ES) - in progress
 - [French](https://translate.wordpress.org/locale/fr/default/wp-plugins/elementor) - (fr_FR) - in progress
 - [Italian](https://translate.wordpress.org/locale/it/default/wp-plugins/elementor) - (it_IT) - in progress
+- [Arabic](https://translate.wordpress.org/locale/fr/default/wp-plugins/elementor) - (ar) - in progress
 
 = Be a contributor =
 If you want to contribute, go to our [Elementor GitHub Repository](https://github.com/pojome/elementor) and see where you can help.
@@ -88,13 +90,13 @@ You can also add a new language via [translate.wordpress.org](https://translate.
 
 = Documentation and Support =
 
-- For documentation and tutorials go to [docs.elementor.com](https://docs.elementor.com/?utm_source=wp-repo&utm_medium=link&utm_campaign=readme).
+- For documentation and tutorials go to our [Documentation](https://docs.elementor.com/?utm_source=wp-repo&utm_medium=link&utm_campaign=readme).
 - If you have any more questions, visit our support on the [Plugin's Forum](https://wordpress.org/support/plugin/elementor).
-- For more information about features, FAQs and documentation, check out [Elementor.com](https://elementor.com/?utm_source=wp-repo&utm_medium=link&utm_campaign=readme).
+- For more information about features, FAQs and documentation, check out our website at [Elementor Page Builder](https://elementor.com/?utm_source=wp-repo&utm_medium=link&utm_campaign=readme).
 
 = Liked Elementor? =
 - Check out our recently featured page on [Product Hunt](https://www.producthunt.com/tech/elementor).
-- Or rate us on [WordPress](https://wordpress.org/support/view/plugin-reviews/elementor?rate=5#postform) :)
+- Or rate us on [WordPress](https://wordpress.org/support/plugin/elementor/reviews/?filter=5/#new-post) :)
 
 == Installation ==
 
@@ -119,7 +121,7 @@ https://www.youtube.com/watch?v=Ypn6fltn_7s
 4. Press the 'Edit with Elementor' button.
 5. Now you can drag and drop widgets from the left panel onto the content area, as well as add new sections and columns that make up the page structure.
 
-For documentation and tutorials go to [docs.elementor.com](https://docs.elementor.com/?utm_source=wp-repo&utm_medium=link&utm_campaign=readme).
+For documentation and tutorials visit our [Knowledge Base](https://docs.elementor.com/?utm_source=wp-repo&utm_medium=link&utm_campaign=readme).
 
 == Frequently Asked Questions ==
 
@@ -157,16 +159,124 @@ No. Elementor supports WordPress 4.4 or greater, and is compatible with PHP 5.4 
 
 == Changelog ==
 
+= 0.11.2 - 21.11.2016 =
+* Fix! - Don't Generate CSS if it's not build with Elementor
+* Fix! - Global font goes wrong after changing weight ([#888](https://github.com/pojome/elementor/issues/888))
+
+= 0.11.1 - 17.11.2016 =
+* Fix! - Columns widget bug with edit options
+* Tweak! - Changed breakpoint for tablet from 1023px to 1024px ([#860](https://github.com/pojome/elementor/issues/860))
+
+= 0.11.0 - 16.11.2016 =
+* New! - Elementor now generates an external CSS file for each page instead of inline CSS ([#325](https://github.com/pojome/elementor/issues/325))
+* New! - Added a tool to regenerate Elementor pages CSS files
+* New! - Added TinyMCE editor for Repeater control, such as Tabs, Accordion and Toggle widgets ([#176](https://github.com/pojome/elementor/issues/176))
+* New! - Added Time Picker control for future widgets
+* Tweak! - 'Edit with Elementor' button color now uses the Admin Color Scheme
+* Tweak! - Improved style for Multiple Select2 control
+* Tweak! - Removed development mode flag
+* Tweak! - Elementor Icon library updated with new icons
+* Tweak! - Align button sizes as a new forms style
+* Tweak! - Panel width expanded for better comfortable editing
+* Tweak! - TinyMCE editor toolbar reduced to basic toolbar, for comfortable editing
+
+= 0.10.7 - 07.11.2016 =
+* Fix! - Image widget template for link and caption ([Topic](https://wordpress.org/support/topic/image-not-aligning-when-linked/))
+* Fix! - Exclude Library from search ([Topic](https://wordpress.org/support/topic/custom-templates-accidentally-show-up-in-search-results/))
+* Fix! - HTML of text widget not being parsed in the preview ([Topic](https://wordpress.org/support/topic/html-of-text-widget-not-being-parsed-in-the-preview/))
+* Fix! - Add new section button in RTL
+* Fix! - Stretched section in RTL
+* Fix! - TinyMCE editor buttons in RTL
+* Fix! - Error messages for template library
+
+= 0.10.6 - 02.11.2016 =
+* Fix! - Some breaks layouts from previous release
+
+= 0.10.5 - 02.11.2016 =
+* Tweak! - Added Compatibility for Autoptimize Plugin ([Topic](https://wordpress.org/support/topic/open-link-in-new-tab-doesnt-work/))
+* Tweak! - Now `elementor_library` custom post type excluded from the sitemap by Yoast SEO ([Topic](https://wordpress.org/support/topic/disable-elementor_library-sitemap-xml/))
+* Tweak! - Added Compatibility for Zerif Pro theme
+* Tweak! - Added Compatibility for themes by Bluchic
+* Tweak! - Added Compatibility for jQuery Masonry Image Gallery plugin ([#762](https://github.com/pojome/elementor/issues/762))
+* Tweak! - Added support for "multiple value" condition in Repeater control
+* Fix! - Bug corrupting JSON post meta on import Elementor pages ([Topic](https://wordpress.org/support/topic/pages-importexport-not-working-properly/))
+* Fix! - `.elementor-slick-slider` class now apply on all Elementor custom slick theme ([#424](https://github.com/pojome/elementor/issues/424))
+* Fix! - Added subset support for Google Fonts to fix issues with some browsers
+
+= 0.10.4 - 26.10.2016 =
+* Tweak! - Updated Font Awesome v4.7.0 (41+ icons)
+* Tweak! - Added type attribute for text input control
+* Tweak! - Improved import template from library
+* Tweak! - Removed admin email from system info copied
+* Fix! - Columns overlay layer for negative top margin scenario
+* Fix! - Added i18n strings to Delete All Content dialog
+* Fix! - Target blank link in heading widget - ([Topic](https://wordpress.org/support/topic/open-link-in-new-tab-doesnt-work/))
+
+= 0.10.3 - 13.10.2016 =
+* Fix! - Hover animation classes for Image widget ([Topic](https://wordpress.org/support/topic/update-issue-animation/), [Topic](https://wordpress.org/support/topic/hover-animation-2/))
+* Fix! - Columns gap for all devices
+* Fix! - Added trigger for changes on Apply button
+* Fix! - Inner section class on front-end
+
+= 0.10.2 - 10.10.2016 =
+* Tweak! - Added Apply button for Shortcode widget to trigger loading of external scripts
+* Tweak! - Restore action `elementor/widgets/widgets_registered`
+* Fix! - Conflict with old versions of Bfi_Thumb plugin
+* Fix! - Conflict with other plugins ([Topic](https://wordpress.org/support/topic/0-10-1-fatal-error-with-html-editor-syntax-highlighter/))
+
+= 0.10.1 - 09.10.2016 =
+* Fix! - Image size default
+
+= 0.10.0 - 09.10.2016 =
+* New! - Choose which colors appear in the editor's color picker. This makes accessing the colors you choose for the site much easier
+* New! - Clear the entire page content in one click ([#607](https://github.com/pojome/elementor/issues/607))
+* New! - Added image size control for Image widget ([#537](https://github.com/pojome/elementor/issues/537))
+* New! - Added social icon for Twitch.tv ([#694](https://github.com/pojome/elementor/issues/694))
+* Tweak! - Data stored in a JSON format instead of serialize, for smoother migration ([#403](https://github.com/pojome/elementor/issues/403))
+* Tweak! - Added Apply button for all WP widgets to trigger loading of external scripts
+* Tweak! - Adding a preview icon for repeater control ([#609](https://github.com/pojome/elementor/issues/609))
+* Tweak! - All widgets code rewritten to allow for better API flexibility
+* Fix! - Icon under 20px size now looks good
+* Fix! - Improve CSS for Icon list alignment ([#620](https://github.com/pojome/elementor/issues/620))
+* Fix! - Ninja Forms widget conflict ([#546](https://github.com/pojome/elementor/issues/546))
+* Fix! - Global Fonts Don't Show Up on Live Preview Screen ([#606](https://github.com/pojome/elementor/issues/606))
+
+= 0.9.3 - 26.09.2016 =
+* Tweak! - New method for import template library
+* Tweak! - Changed priority for 3rd party plugins
+* Fix! - Conflict with WooCommerce Memberships
+* Fix! - Conflict with Lifter LMS ([#612](https://github.com/pojome/elementor/issues/612))
+* Fix! - Icon list correct alignment ([#620](https://github.com/pojome/elementor/issues/620))
+* Fix! - Reload the iframe causes the panel to stop working
+
+= 0.9.2 - 21.09.2016 =
+* Fix! - Added color default for Progress Bar when schemes color is disabled
+* Fix! - Stretched section in RTL bug
+
+= 0.9.1 - 20.09.2016 =
+* Fix! - Changed again "fit to screen" to height for "content position" support
+
+= 0.9.0 - 20.09.2016 =
+* New! - Added stretch section control for all parent sections
+* New! - Added content width option to set the default width of the content area
+* Tweak! - Changed Fit to Screen to `min-height` for better behavior on mobile and content overflow scenarios.
+* Tweak! - Added Switcher control for editor panel ([#143](https://github.com/pojome/elementor/issues/143))
+* Tweak! - Improved Integration with 3rd party plugins and themes
+* Fix! - Hidden templates library items from nav menu
+* Fix! - Added color default for Button and Icon when schemes color is disabled
+* Fix! - Added default size for the Heading widget - ([#533](https://github.com/pojome/elementor/issues/533))
+* Fix! - Button border color hover control - only shown when border is set
+
 = 0.8.1 - 11.09.2016 =
-* Fix! - Correcting title link color in Image Box widget ([#531](https://github.com/pojome/elementor/issues/531))
-* Fix! - Resolved responsive bug in Image Gallery widget
-* Fix! - Resolved bug in editor for safari ([#530](https://github.com/pojome/elementor/issues/530), [#540](https://github.com/pojome/elementor/issues/540))
 * Tweak! - Changed prevent scroll default to `Yes` for Maps widget
 * Tweak! - Removed `asp_tags` requirements
 * Tweak! - Added alignment responsive support for Image Box and Icon Box widgets
 * Tweak! - Added mobile editing for Spacer widget
 * Tweak! - Added title spacing for Image Box and Icon Box
 * Tweak! - Removed quick link to Edit with Elementor for non-Elementor pages ([#539](https://github.com/pojome/elementor/issues/539))
+* Fix! - Correcting title link color in Image Box widget ([#531](https://github.com/pojome/elementor/issues/531))
+* Fix! - Resolved responsive bug in Image Gallery widget
+* Fix! - Resolved bug in editor for safari ([#530](https://github.com/pojome/elementor/issues/530), [#540](https://github.com/pojome/elementor/issues/540))
 
 = 0.8.0 - 07.09.2016 =
 * New! - Added columns ordering on mobile normal / reverse

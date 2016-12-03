@@ -63,7 +63,7 @@ class Elementor_Test_Controls extends WP_UnitTestCase {
 
 		$this->assertEquals(
 			'10px;',
-			$text_control->get_replace_style_values(
+			$text_control->get_replaced_style_values(
 				'{{VALUE}};',
 				'10px'
 			)
@@ -72,7 +72,7 @@ class Elementor_Test_Controls extends WP_UnitTestCase {
 		$dimensions_control = Elementor\Plugin::instance()->controls_manager->get_control( 'dimensions' );
 		$this->assertEquals(
 			'1px 2px 3px 4px;',
-			$dimensions_control->get_replace_style_values(
+			$dimensions_control->get_replaced_style_values(
 				'{{TOP}} {{RIGHT}} {{BOTTOM}} {{LEFT}};',
 				[
 					'top' => '1px',
@@ -85,13 +85,17 @@ class Elementor_Test_Controls extends WP_UnitTestCase {
 	}
 
 	public function test_checkCondition() {
-		$element_obj = Elementor\Plugin::instance()->widgets_manager->get_widget( 'text-editor' );
+		Elementor\Plugin::instance()->widgets_manager->get_widget_types(); // Ensure the widgets initialized
 
-		$this->assertTrue( $element_obj->is_control_visible( [], [] ) );
-		
-		$instance = [
-			'control_1' => 'value',
-		];
+		$element_obj = new \Elementor\Widget_Text_Editor( [
+			'id' => 'test_id',
+			'settings' => [
+				'control_1' => 'value',
+			]
+		] );
+
+		$this->assertTrue( $element_obj->is_control_visible( [] ) );
+
 		$control_option = [
 			'name' => 'control_2',
 			'condition' => [
@@ -99,7 +103,7 @@ class Elementor_Test_Controls extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertFalse( $element_obj->is_control_visible( $instance, $control_option) );
+		$this->assertFalse( $element_obj->is_control_visible( $control_option) );
 
 		$control_option = [
 			'name' => 'control_2',
@@ -108,7 +112,7 @@ class Elementor_Test_Controls extends WP_UnitTestCase {
 			],
 		];
 
-		$this->assertTrue( $element_obj->is_control_visible( $instance, $control_option) );
+		$this->assertTrue( $element_obj->is_control_visible( $control_option) );
 
 		$control_option = [
 			'name' => 'control_2',
@@ -116,7 +120,7 @@ class Elementor_Test_Controls extends WP_UnitTestCase {
 				'control_1!' => 'value',
 			],
 		];
-		$this->assertFalse( $element_obj->is_control_visible( $instance, $control_option) );
+		$this->assertFalse( $element_obj->is_control_visible( $control_option) );
 	}
 
 	public function test_getDefaultValue() {

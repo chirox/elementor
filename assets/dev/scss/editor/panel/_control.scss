@@ -4,7 +4,7 @@
 
 #elementor-panel-page-editor {
 
-	.elementor-controls {
+	#elementor-controls {
 
 		> .elementor-control {
 
@@ -163,15 +163,9 @@
 	}
 
 	.elementor-control-description {
-		margin-top: 10px;
-	}
+		@extend .elementor-descriptor;
 
-	.elementor-control-description,
-	.elementor-control-descriptor {
-		font-size: 11px;
-		font-style: italic;
-		line-height: 1.2;
-		color: $editor-light;
+		margin-top: 10px;
 	}
 
 	.elementor-choices {
@@ -312,6 +306,23 @@
 		.elementor-device-tablet & {
 			background-color: $editor-info;
 		}
+	}
+
+	#elementor-update-preview {
+		margin: 15px 15px 0;
+		background-color: $editor-background;
+		display: flex;
+		align-items: center;
+	}
+
+	#elementor-update-preview-button-wrapper {
+		flex-grow: 1;
+		text-align: $end;
+	}
+
+	#elementor-update-preview-button {
+		padding: 8px 15px;
+		text-transform: uppercase;
 	}
 
 	// Media Control
@@ -624,8 +635,8 @@
 			margin-top: 7px;
 			height: initial;
 			line-height: 1;
-			font-size: 11px;
-			padding: 3px 9px;
+			font-size: 10px;
+			padding: 3px 7px;
 			background-color: $editor-background;
 		}
 
@@ -646,8 +657,8 @@
 		.wp-switch-editor {
 			border: none;
 			color: $editor-dark;
-			font-size: 11px;
-			padding: 3px 12px 4px;
+			font-size: 10px;
+			padding: 3px 9px 4px;
 			border-radius: 3px 3px 0 0;
 		}
 
@@ -694,6 +705,8 @@
 		}
 
 		.mce-btn {
+			margin-right: 0;
+			margin-left: 0;
 
 			&:hover, &:active, &.mce-active {
 				border-color: $editor-lightest;
@@ -732,7 +745,7 @@
 		}
 
 		.elementor-control-media {
-			padding-top: 20px;
+		//	padding-top: 20px; //temp remove for some space in gallery widget
 		}
 
 		.elementor-control-gallery-thumbnails {
@@ -949,4 +962,10 @@
 
 	// Box-shadow control
 	@import "controls/box-shadow";
+
+	// Switcher control
+	@import "controls/switcher";
+
+	// Order control
+	@import "controls/order";
 }

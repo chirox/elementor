@@ -5,6 +5,16 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class Editor {
 
+	private $_is_edit_mode;
+
+	private $_editor_templates = [
+		'editor-templates/global.php',
+		'editor-templates/panel.php',
+		'editor-templates/panel-elements.php',
+		'editor-templates/repeater.php',
+		'editor-templates/templates.php',
+	];
+
 	public function init() {
 		if ( is_admin() || ! $this->is_edit_mode() ) {
 			return;
@@ -58,6 +68,10 @@ class Editor {
 	}
 
 	public function is_edit_mode() {
+		if ( null !== $this->_is_edit_mode ) {
+			return $this->_is_edit_mode;
+		}
+
 		if ( ! User::is_current_user_can_edit() ) {
 			return false;
 		}
@@ -122,6 +136,11 @@ class Editor {
 	public function enqueue_scripts() {
 		global $wp_styles, $wp_scripts;
 
+		$post_id = get_the_ID();
+		$plugin = Plugin::instance();
+
+		$editor_data = $plugin->db->get_builder( $post_id, DB::REVISION_DRAFT );
+
 		// Reset global variable
 		$wp_styles = new \WP_Styles();
 		$wp_scripts = new \WP_Scripts();
@@ -140,7 +159,7 @@ class Editor {
 		);
 
 		// Enqueue frontend scripts too
-		Plugin::instance()->frontend->enqueue_scripts();
+		$plugin->frontend->enqueue_scripts();
 
 		wp_register_script(
 			'backbone-marionette',
@@ -231,6 +250,16 @@ class Editor {
 		);
 
 		wp_register_script(
+			'jquery-simple-dtpicker',
+			ELEMENTOR_ASSETS_URL . 'lib/jquery-simple-dtpicker/jquery.simple-dtpicker' . $suffix . '.js',
+			[
+				'jquery',
+			],
+			'1.12.0',
+			true
+		);
+
+		wp_register_script(
 			'elementor-editor',
 			ELEMENTOR_ASSETS_URL . 'js/editor' . $suffix . '.js',
 			[
@@ -247,13 +276,12 @@ class Editor {
 				'heartbeat',
 				'elementor-dialog',
 				'jquery-select2',
+				'jquery-simple-dtpicker',
 			],
-			Plugin::instance()->get_version(),
+			$plugin->get_version(),
 			true
 		);
 		wp_enqueue_script( 'elementor-editor' );
-
-		$post_id = get_the_ID();
 
 		// Tweak for WP Admin menu icons
 		wp_print_styles( 'editor-buttons' );
@@ -268,18 +296,19 @@ class Editor {
 			'ElementorConfig',
 			[
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'home_url' => home_url(),
 				'nonce' => wp_create_nonce( 'elementor-editing' ),
 				'preview_link' => add_query_arg( 'elementor-preview', '', remove_query_arg( 'elementor' ) ),
-				'elements_categories' => Plugin::instance()->elements_manager->get_categories(),
-				'controls' => Plugin::instance()->controls_manager->get_controls_data(),
-				'elements' => Plugin::instance()->elements_manager->get_register_elements_data(),
-				'widgets' => Plugin::instance()->widgets_manager->get_registered_widgets_data(),
+				'elements_categories' => $plugin->elements_manager->get_categories(),
+				'controls' => $plugin->controls_manager->get_controls_data(),
+				'elements' => $plugin->elements_manager->get_element_types_config(),
+				'widgets' => $plugin->widgets_manager->get_widget_types_config(),
 				'schemes' => [
-					'items' => Plugin::instance()->schemes_manager->get_registered_schemes_data(),
+					'items' => $plugin->schemes_manager->get_registered_schemes_data(),
 					'enabled_schemes' => Schemes_Manager::get_enabled_schemes(),
 				],
-				'default_schemes' => Plugin::instance()->schemes_manager->get_schemes_defaults(),
-				'system_schemes' => Plugin::instance()->schemes_manager->get_system_schemes(),
+				'default_schemes' => $plugin->schemes_manager->get_schemes_defaults(),
+				'system_schemes' => $plugin->schemes_manager->get_system_schemes(),
 				'wp_editor' => $this->_get_wp_editor_config(),
 				'post_id' => $post_id,
 				'post_permalink' => get_the_permalink(),
@@ -288,9 +317,10 @@ class Editor {
 				'elementor_site' => 'https://go.elementor.com/about-elementor/',
 				'help_the_content_url' => 'https://go.elementor.com/the-content-missing/',
 				'assets_url' => ELEMENTOR_ASSETS_URL,
-				'data' => Plugin::instance()->db->get_builder( $post_id, DB::REVISION_DRAFT ),
+				'data' => $editor_data,
 				'locked_user' => $locked_user,
 				'is_rtl' => is_rtl(),
+				'locale' => get_locale(),
 				'introduction' => User::get_introduction(),
 				'viewportBreakpoints' => Responsive::get_breakpoints(),
 				'i18n' => [
@@ -307,7 +337,6 @@ class Editor {
 					'edit_element' => __( 'Edit {0}', 'elementor' ),
 					'global_colors' => __( 'Global Colors', 'elementor' ),
 					'global_fonts' => __( 'Global Fonts', 'elementor' ),
-					'page_settings' => __( 'Page Settings', 'elementor' ),
 					'elementor_settings' => __( 'Elementor Settings', 'elementor' ),
 					'soon' => __( 'Soon', 'elementor' ),
 					'revisions_history' => __( 'Revisions History', 'elementor' ),
@@ -327,11 +356,16 @@ class Editor {
 					'section' => __( 'Section', 'elementor' ),
 					'delete_template' => __( 'Delete Template', 'elementor' ),
 					'delete_template_confirm' => __( 'Are you sure you want to delete this template?', 'elementor' ),
+					'color_picker' => __( 'Color Picker', 'elementor' ),
+					'clear_page' => __( 'Delete All Content', 'elementor' ),
+					'dialog_confirm_clear_page' => __( 'Attention! We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?', 'elementor' ),
+					'asc' => __( 'Ascending order', 'elementor' ),
+					'desc' => __( 'Descending order', 'elementor' ),
 				],
 			]
 		);
 
-		Plugin::instance()->controls_manager->enqueue_control_scripts();
+		$plugin->controls_manager->enqueue_control_scripts();
 	}
 
 	public function enqueue_styles() {
@@ -343,7 +377,7 @@ class Editor {
 			'font-awesome',
 			ELEMENTOR_ASSETS_URL . 'lib/font-awesome/css/font-awesome' . $suffix . '.css',
 			[],
-			'4.6.3'
+			'4.7.0'
 		);
 
 		wp_register_style(
@@ -368,7 +402,14 @@ class Editor {
 		);
 
 		wp_register_style(
-			'elementor-admin',
+			'jquery-simple-dtpicker',
+			ELEMENTOR_ASSETS_URL . 'lib/jquery-simple-dtpicker/jquery.simple-dtpicker' . $suffix . '.css',
+			[],
+			'1.12.0'
+		);
+
+		wp_register_style(
+			'elementor-editor',
 			ELEMENTOR_ASSETS_URL . 'css/editor' . $direction_suffix . $suffix . '.css',
 			[
 				'font-awesome',
@@ -376,11 +417,12 @@ class Editor {
 				'elementor-icons',
 				'wp-auth-check',
 				'google-font-roboto',
+				'jquery-simple-dtpicker',
 			],
 			Plugin::instance()->get_version()
 		);
 
-		wp_enqueue_style( 'elementor-admin' );
+		wp_enqueue_style( 'elementor-editor' );
 	}
 
 	protected function _get_wp_editor_config() {
@@ -390,7 +432,7 @@ class Editor {
 			'elementorwpeditor',
 			[
 				'editor_class' => 'elementor-wp-editor',
-				'textarea_rows' => 15,
+				'editor_height' => 250,
 				'drag_drop_upload' => true,
 			]
 		);
@@ -401,16 +443,29 @@ class Editor {
 		do_action( 'elementor/editor/wp_head' );
 	}
 
-	public function wp_footer() {
-		Plugin::instance()->controls_manager->render_controls();
-		Plugin::instance()->widgets_manager->render_widgets_content();
-		Plugin::instance()->elements_manager->render_elements_content();
+	public function add_editor_template( $template_path ) {
+		$this->_editor_templates[] = $template_path;
+	}
 
-		include( 'editor-templates/global.php' );
-		include( 'editor-templates/panel.php' );
-		include( 'editor-templates/panel-elements.php' );
-		include( 'editor-templates/repeater.php' );
-		include( 'editor-templates/templates.php' );
+	public function wp_footer() {
+		$plugin = Plugin::instance();
+
+		$plugin->controls_manager->render_controls();
+		$plugin->widgets_manager->render_widgets_content();
+		$plugin->elements_manager->render_elements_content();
+
+		$plugin->schemes_manager->print_schemes_templates();
+
+		foreach ( $this->_editor_templates as $editor_template ) {
+			include $editor_template;
+		}
+	}
+
+	/**
+	 * @param bool $edit_mode
+	 */
+	public function set_edit_mode( $edit_mode ) {
+		$this->_is_edit_mode = $edit_mode;
 	}
 
 	public function __construct() {

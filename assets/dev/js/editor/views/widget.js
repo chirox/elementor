@@ -5,15 +5,17 @@ WidgetView = BaseElementView.extend( {
 	_templateType: null,
 
 	getTemplate: function() {
+		var editModel = this.getEditModel();
+
 		if ( 'remote' !== this.getTemplateType() ) {
-			return Marionette.TemplateCache.get( '#tmpl-elementor-widget-' + this.model.get( 'widgetType' ) + '-content' );
+			return Marionette.TemplateCache.get( '#tmpl-elementor-' + editModel.get( 'elType' ) + '-' + editModel.get( 'widgetType' ) + '-content' );
 		} else {
 			return _.template( '' );
 		}
 	},
 
 	className: function() {
-		return 'elementor-widget elementor-widget-' + this.model.get( 'widgetType' );
+		return 'elementor-widget';
 	},
 
 	modelEvents: {
@@ -21,39 +23,28 @@ WidgetView = BaseElementView.extend( {
 		'remote:render': 'onModelRemoteRender'
 	},
 
-	triggers: {
-		'click': {
-			event: 'click:edit',
-			stopPropagation: false
-		},
-		'click > .elementor-editor-element-settings .elementor-editor-add-element': 'click:add',
-		'click > .elementor-editor-element-settings .elementor-editor-element-duplicate': 'click:duplicate'
-	},
+	events: function() {
+		var events = BaseElementView.prototype.events.apply( this, arguments );
 
-	elementEvents: {
-		'click > .elementor-editor-element-settings .elementor-editor-element-remove': 'onClickRemove'
-	},
+		events.click = 'onClickEdit';
 
-	behaviors: {
-		HandleEditor: {
-			behaviorClass: require( 'elementor-behaviors/handle-editor' )
-		},
-		HandleEditMode: {
-			behaviorClass: require( 'elementor-behaviors/handle-edit-mode' )
-		}
+		return events;
 	},
 
 	initialize: function() {
 		BaseElementView.prototype.initialize.apply( this, arguments );
 
-		if ( ! this.model.getHtmlCache() ) {
-			this.model.renderRemoteServer();
+		var editModel = this.getEditModel();
+
+		if ( ! editModel.getHtmlCache() ) {
+			editModel.renderRemoteServer();
 		}
 	},
 
 	getTemplateType: function() {
-		if ( null === this.getOption( '_templateType' ) ) {
-			var $template = Backbone.$( '#tmpl-elementor-widget-' + this.model.get( 'widgetType' ) + '-content' );
+		if ( null === this._templateType ) {
+			var editModel = this.getEditModel(),
+				$template = Backbone.$( '#tmpl-elementor-' + editModel.get( 'elType' ) + '-' + editModel.get( 'widgetType' ) + '-content' );
 
 			if ( 0 === $template.length ) {
 				this._templateType = 'remote';
@@ -62,7 +53,7 @@ WidgetView = BaseElementView.extend( {
 			}
 		}
 
-		return this.getOption( '_templateType' );
+		return this._templateType;
 	},
 
 	onModelBeforeRemoteRender: function() {
@@ -84,33 +75,46 @@ WidgetView = BaseElementView.extend( {
 	},
 
 	attachElContent: function( html ) {
-		var htmlCache = this.model.getHtmlCache();
+		var htmlCache = this.getEditModel().getHtmlCache();
 
 		if ( htmlCache ) {
 			html = htmlCache;
 		}
 
-		this.$el.html( html );
+		//this.$el.html( html );
+		_.defer( _.bind( function() {
+			elementorFrontend.getScopeWindow().jQuery( '#' + this.getElementUniqueID() ).html( html );
+		}, this ) );
 
 		return this;
 	},
 
 	onRender: function() {
-		this.$el
-			.removeClass( 'elementor-widget-empty' )
-			.children( '.elementor-widget-empty-icon' )
-			.remove();
+        var self = this,
+	        editModel = self.getEditModel(),
+	        skinType = editModel.getSetting( '_skin' ) || 'default';
 
-		this.$el.imagesLoaded().always( _.bind( function() {
-			// Is element empty?
-			if ( 1 > this.$el.height() ) {
-				this.$el.addClass( 'elementor-widget-empty' );
+        self.$el
+	        .attr( 'data-element_type', editModel.get( 'widgetType' ) + '.' + skinType )
+            .removeClass( 'elementor-widget-empty' )
+	        .addClass( 'elementor-widget-' + editModel.get( 'widgetType' ) )
+	        .addClass( 'elementor-widget-can-edit' )
+            .children( '.elementor-widget-empty-icon' )
+            .remove();
 
-				// TODO: REMOVE THIS !!
-				// TEMP CODING !!
-				this.$el.append( '<i class="elementor-widget-empty-icon eicon-' + this.model.getIcon() + '"></i>' );
-			}
-		}, this ) );
+        self.$el.imagesLoaded().always( function() {
+
+            setTimeout( function() {
+                if ( 1 > self.$el.height() ) {
+                    self.$el.addClass( 'elementor-widget-empty' );
+
+                    // TODO: REMOVE THIS !!
+                    // TEMP CODING !!
+                    self.$el.append( '<i class="elementor-widget-empty-icon eicon-' + editModel.getIcon() + '"></i>' );
+                }
+            }, 200 );
+            // Is element empty?
+        } );
 	}
 } );
 

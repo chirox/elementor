@@ -1,7 +1,6 @@
 var BaseSettingsModel = require( 'elementor-models/base-settings' ),
 	WidgetSettingsModel = require( 'elementor-models/widget-settings' ),
 	ColumnSettingsModel = require( 'elementor-models/column-settings' ),
-	RowSettingsModel = require( 'elementor-models/row-settings' ),
 	SectionSettingsModel = require( 'elementor-models/section-settings' ),
 
 	ElementModel,
@@ -19,39 +18,17 @@ ElementModel = Backbone.Model.extend( {
 	remoteRender: false,
 	_htmlCache: null,
 	_jqueryXhr: null,
+	renderOnLeave: false,
 
 	initialize: function( options ) {
-		var elements = this.get( 'elements' ),
-			elType = this.get( 'elType' ),
-			settings;
-
-		var settingModels = {
-			widget: WidgetSettingsModel,
-			column: ColumnSettingsModel,
-			row: RowSettingsModel,
-			section: SectionSettingsModel
-		};
-
-		var SettingsModel = settingModels[ elType ] || BaseSettingsModel;
-
-		settings = this.get( 'settings' ) || {};
-		if ( 'widget' === elType ) {
-			settings.widgetType = this.get( 'widgetType' );
-		}
-
-		settings.elType = elType;
-		settings.isInner = this.get( 'isInner' );
-
-		settings = new SettingsModel( settings );
-		this.set( 'settings', settings );
-
-		this.initEditSettings();
+		var elType = this.get( 'elType' ),
+			elements = this.get( 'elements' );
 
 		if ( undefined !== elements ) {
 			this.set( 'elements', new ElementCollection( elements ) );
 		}
 
-		if ( 'widget' === this.get( 'elType' ) ) {
+		if ( 'widget' === elType ) {
 			this.remoteRender = true;
 			this.setHtmlCache( options.htmlCache || '' );
 		}
@@ -61,6 +38,28 @@ ElementModel = Backbone.Model.extend( {
 
 		// Make call to remote server as throttle function
 		this.renderRemoteServer = _.throttle( this.renderRemoteServer, 1000 );
+
+		var settingModels = {
+			widget: WidgetSettingsModel,
+			column: ColumnSettingsModel,
+			section: SectionSettingsModel
+		};
+
+		var SettingsModel = settingModels[ elType ] || BaseSettingsModel,
+			settings = this.get( 'settings' ) || {};
+
+		if ( 'widget' === elType ) {
+			settings.widgetType = this.get( 'widgetType' );
+		}
+
+		settings.elType = elType;
+		settings.isInner = this.get( 'isInner' );
+
+		settings = new SettingsModel( settings );
+
+		this.set( 'settings', settings );
+
+		this.initEditSettings();
 
 		this.on( 'destroy', this.onDestroy );
 		this.on( 'editor:close', this.onCloseEditor );
@@ -85,7 +84,10 @@ ElementModel = Backbone.Model.extend( {
 
 	onCloseEditor: function() {
 		this.initEditSettings();
-		this.renderRemoteServer();
+
+		if ( this.renderOnLeave ) {
+			this.renderRemoteServer();
+		}
 	},
 
 	setSetting: function( key, value, triggerChange ) {
@@ -139,6 +141,8 @@ ElementModel = Backbone.Model.extend( {
 			return;
 		}
 
+		this.renderOnLeave = false;
+
 		this.trigger( 'before:remote:render' );
 
 		if ( this._jqueryXhr && 4 !== this._jqueryXhr ) {
@@ -175,7 +179,9 @@ ElementModel = Backbone.Model.extend( {
 			newModel.set( 'elements', elements.clone() );
 		}
 
-		newModel.set( 'settings', settings.clone() );
+		if ( settings instanceof BaseSettingsModel ) {
+			newModel.set( 'settings', settings.clone() );
+		}
 
 		return newModel;
 	},

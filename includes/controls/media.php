@@ -16,6 +16,30 @@ class Control_Media extends Control_Base_Multiple {
 		];
 	}
 
+	/**
+	 * Fetch images and replace to new
+	 *
+	 * @param $settings
+	 *
+	 * @return array|bool
+	 */
+	public function on_import( $settings ) {
+		if ( empty( $settings['url'] ) ) {
+			return $settings;
+		}
+
+		$settings = Plugin::instance()->templates_manager->get_import_images_instance()->import( $settings );
+
+		if ( ! $settings ) {
+			$settings = [
+				'id' => '',
+				'url' => Utils::get_placeholder_image_src(),
+			];
+		}
+
+		return $settings;
+	}
+
 	public function enqueue() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_media();
@@ -45,9 +69,6 @@ class Control_Media extends Control_Base_Multiple {
 		<div class="elementor-control-field">
 			<label class="elementor-control-title">{{{ data.label }}}</label>
 			<div class="elementor-control-input-wrapper">
-				<# if ( data.description ) { #>
-				<div class="elementor-control-description">{{{ data.description }}}</div>
-				<# } #>
 				<div class="elementor-control-media">
 					<div class="elementor-control-media-upload-button">
 						<i class="fa fa-plus-circle"></i>
@@ -58,6 +79,9 @@ class Control_Media extends Control_Base_Multiple {
 					</div>
 				</div>
 			</div>
+			<# if ( data.description ) { #>
+				<div class="elementor-control-description">{{{ data.description }}}</div>
+			<# } #>
 			<input type="hidden" data-setting="{{ data.name }}" />
 		</div>
 		<?php

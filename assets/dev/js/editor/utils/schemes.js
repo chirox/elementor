@@ -50,17 +50,17 @@ Schemes = function() {
 		} );
 	};
 
-	var fetchWidgetControlsStyles = function( widget, widgetType ) {
+	var fetchWidgetControlsStyles = function( widget ) {
 		var widgetSchemeControls = self.getWidgetSchemeControls( widget );
 
 		_.each( widgetSchemeControls, function( control ) {
-			fetchControlStyles( control, widgetType );
+			fetchControlStyles( control, widget.widget_type );
 		} );
 	};
 
 	var fetchAllWidgetsSchemesStyle = function() {
-		_.each( elementor.config.widgets, function( widget, widgetType ) {
-			fetchWidgetControlsStyles(  widget, widgetType  );
+		_.each( elementor.config.widgets, function( widget ) {
+			fetchWidgetControlsStyles(  widget  );
 		} );
 	};
 
@@ -132,19 +132,23 @@ Schemes = function() {
 
 	this.resetSchemes = function( schemeName ) {
 		schemes[ schemeName ] = elementor.helpers.cloneObject( elementor.config.schemes.items[ schemeName ] );
-
-		this.onSchemeChange();
 	};
 
 	this.saveScheme = function( schemeName ) {
 		elementor.config.schemes.items[ schemeName ].items = elementor.helpers.cloneObject( schemes[ schemeName ].items );
+
+		var itemsToSave = {};
+
+		_.each( schemes[ schemeName ].items, function( item, key ) {
+			itemsToSave[ key ] = item.value;
+		} );
 
 		NProgress.start();
 
 		elementor.ajax.send( 'apply_scheme', {
 			data: {
 				scheme_name: schemeName,
-				data: JSON.stringify( schemes[ schemeName ].items )
+				data: JSON.stringify( itemsToSave )
 			},
 			success: function() {
 				NProgress.done();
@@ -154,12 +158,6 @@ Schemes = function() {
 
 	this.setSchemeValue = function( schemeName, itemKey, value ) {
 		schemes[ schemeName ].items[ itemKey ].value = value;
-
-		this.onSchemeChange();
-	};
-
-	this.onSchemeChange = function() {
-		this.printSchemesStyle();
 	};
 };
 

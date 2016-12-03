@@ -126,18 +126,11 @@ ControlBaseItemView = Marionette.CompositeView.extend( {
 			inputValue = $input.val(),
 			inputType = $input.attr( 'type' );
 
-		if ( 'checkbox' === inputType ) {
-			return $input.prop( 'checked' );
-		} else if ( 'radio' === inputType ) {
+		if ( -1 !== [ 'radio', 'checkbox' ].indexOf( inputType ) ) {
 			return $input.prop( 'checked' ) ? inputValue : '';
 		}
 
 		return inputValue;
-	},
-
-	// This method used inside of repeater
-	getFieldTitleValue: function() {
-		return this.getControlValue();
 	},
 
 	setInputValue: function( input, value ) {
@@ -148,6 +141,8 @@ ControlBaseItemView = Marionette.CompositeView.extend( {
 			$input.prop( 'checked', !! value );
 		} else if ( 'radio' === inputType ) {
 			$input.filter( '[value="' + value + '"]' ).prop( 'checked', true );
+		} else if ( 'select2' === inputType ) {
+			// don't touch
 		} else {
 			$input.val( value );
 		}
@@ -208,7 +203,7 @@ ControlBaseItemView = Marionette.CompositeView.extend( {
 	},
 
 	toggleControlVisibility: function() {
-		var isVisible = elementor.helpers.isControlVisible( this.model, this.elementSettingsModel );
+		var isVisible = elementor.helpers.isControlVisible( this.model, this.elementSettingsModel.attributes );
 
 		this.$el.toggleClass( 'elementor-hidden-control', ! isVisible );
 
